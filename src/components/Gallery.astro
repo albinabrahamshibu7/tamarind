@@ -1,0 +1,148 @@
+---
+import SlabEdge from './SlabEdge.astro';
+import Slices from './Slices.astro';
+import { gallery } from '../data/site';
+
+const rot = [-4, 3, -2, 4, -3, 2, -3, 4];
+const lift = [26, -10, 18, -22, 12, -6, 24, -14];
+const mid = Math.floor(gallery.length / 2);
+const before = gallery.slice(0, mid);
+const after = gallery.slice(mid);
+---
+
+<section id="gallery" class="gal sec theme-paper" aria-labelledby="gal-h">
+  <header class="gal__head wrap">
+    <h2 id="gal-h" class="display h2" data-reveal="up">Under the<br />open sky</h2>
+    <p class="lead muted" data-reveal="up" style="--delay:.08s">A dark room inside. A tree, long tables and lights out in the yard.</p>
+  </header>
+
+  <div class="gal__viewport" data-progress="through">
+    <ul class="gal__row" role="list" data-gal-row>
+      {
+        before.map((g, i) => (
+          <li class="gal__card" style={`--r:${rot[i]}deg;--y:${lift[i]}px`}>
+            <img src={g.src} alt={g.alt} width="700" height="840" loading="lazy" decoding="async" />
+          </li>
+        ))
+      }
+      <li class="gal__promo" data-gal-center style="--r:0deg;--y:-20px">
+        <Slices class="gal__promo-mark" />
+        <p class="display gal__promo-h">Bring the<br />whole table</p>
+        <p class="gal__promo-q">Platters serve 2 to 5. Every one comes with the full set of sides.</p>
+        <a class="btn btn--inverse" href="#menu">See the menu</a>
+      </li>
+      {
+        after.map((g, i) => (
+          <li class="gal__card" style={`--r:${rot[i + mid]}deg;--y:${lift[i + mid]}px`}>
+            <img src={g.src} alt={g.alt} width="700" height="840" loading="lazy" decoding="async" />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  <SlabEdge at="bottom" seed={33} />
+</section>
+
+<style>
+  .gal {
+    --p: 0;
+    padding-block: clamp(60px, 8vw, 120px) clamp(180px, 17vw, 270px);
+    overflow: hidden;
+  }
+  .gal__head {
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+    margin-bottom: clamp(40px, 5vw, 70px);
+  }
+  .gal__head h2,
+  .gal__head p {
+    margin: 0;
+  }
+  .gal__head p {
+    max-width: 36ch;
+  }
+  .gal__viewport {
+    padding-block: 40px;
+  }
+  .gal__row {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 2vw, 28px);
+    width: max-content;
+    /* scroll-linked drift. --c (set in JS) centres the promo card. */
+    transform: translateX(calc(-1 * var(--c, 0px) + (0.5 - var(--p)) * 70vw));
+    will-change: transform;
+  }
+  .gal__card,
+  .gal__promo {
+    flex: none;
+    width: clamp(220px, 24vw, 340px);
+    aspect-ratio: 5 / 6;
+    rotate: var(--r);
+    translate: 0 var(--y);
+    transition:
+      rotate 0.5s var(--spring),
+      scale 0.5s var(--spring);
+  }
+  .gal__card {
+    position: relative;
+    overflow: hidden;
+    border: 8px solid #fffdf8;
+    outline: 1px solid var(--line);
+    background: var(--surface-sunken);
+  }
+  .gal__card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .gal__card:hover {
+    rotate: 0deg;
+    scale: 1.04;
+    z-index: 2;
+  }
+  .gal__promo {
+    background: var(--brand);
+    color: var(--on-brand);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 28px;
+    aspect-ratio: 5 / 5.6;
+  }
+  .gal__promo p {
+    margin: 0;
+  }
+  .gal__promo :global(.gal__promo-mark) {
+    color: var(--on-brand);
+    margin-bottom: auto;
+  }
+  .gal__promo-h {
+    font-size: clamp(2rem, 3vw, 2.75rem);
+  }
+  .gal__promo-q {
+    font-size: 15px;
+    line-height: 22px;
+    max-width: 26ch;
+  }
+  .gal__promo .btn {
+    margin-top: 6px;
+  }
+  @media (max-width: 700px) {
+    .gal__row {
+      transform: translateX(calc(-1 * var(--c, 0px) + (0.5 - var(--p)) * 260vw));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gal {
+      --p: 0.5 !important;
+    }
+  }
+</style>

@@ -1,0 +1,103 @@
+---
+import Logo from './Logo.astro';
+import { nav, business, telLink, PROTOTYPE } from '../data/site';
+---
+
+<footer class="foot sec theme-pit grain">
+  <div class="wrap foot__inner">
+    <a href="/#top" aria-label="Back to top" class="foot__logo"><Logo variant="vertical" tone="ember-lit" height={210} /></a>
+    <nav class="foot__nav label" aria-label="Footer">
+      {nav.map((l) => <a href={l.href}>{l.label}</a>)}
+      <a href="/menu">Full menu</a>
+      <a href="/#contact">Find us</a>
+    </nav>
+    <p class="foot__facts">
+      {business.addressLines.join(', ')}<br />
+      {business.hoursLong}<br />
+      <a href={telLink}>{business.phoneDisplay}</a> · <a href={business.instagramUrl} target="_blank" rel="noopener noreferrer">@{business.instagramHandle}</a>
+    </p>
+    <div class="foot__sub label">
+      <a href="/privacy-policy">Privacy</a>
+      <a href="/#top">Back to top</a>
+    </div>
+    <p class="foot__copy">© 2026 Cafe Tamarind, Kollappally, Pala.</p>
+    {
+      PROTOTYPE && (
+        <p class="foot__fine">
+          Design prototype. Smokehouse prices are from the September 2026 menu; prices marked * are from 2025 sheets and need the owner's confirmation. Photographs are guest photos from the Cafe Tamarind Google Maps listing and the round plates are stock styling, all placeholders until the brand shoot.
+        </p>
+      )
+    }
+  </div>
+  <p class="foot__mega display" aria-hidden="true">Smokehouse</p>
+</footer>
+
+<style>
+  .foot {
+    padding-top: clamp(60px, 8vw, 110px);
+    overflow: hidden;
+  }
+  .foot__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    text-align: center;
+  }
+  .foot__logo {
+    margin-bottom: 8px;
+  }
+  .foot__nav,
+  .foot__sub {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 26px;
+    font-size: 13px;
+  }
+  .foot__nav a,
+  .foot__sub a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .foot__sub {
+    color: var(--ink-muted);
+  }
+  .foot__nav a:hover,
+  .foot__sub a:hover,
+  .foot__facts a:hover {
+    color: var(--brand-text);
+  }
+  .foot__facts {
+    margin: 0;
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--ink-muted);
+  }
+  .foot__facts a {
+    color: var(--ink);
+  }
+  .foot__copy {
+    margin: 0;
+    font-size: 13px;
+    color: var(--ink-muted);
+  }
+  .foot__fine {
+    max-width: 640px;
+    margin: 6px 0 0;
+    font-size: 12px;
+    line-height: 18px;
+    color: #8f857a;
+  }
+  .foot__mega {
+    margin: clamp(30px, 5vw, 60px) 0 0;
+    text-align: center;
+    font-size: 20.5vw;
+    line-height: 0.74;
+    white-space: nowrap;
+    color: var(--char-900);
+    translate: 0 14%;
+    user-select: none;
+  }
+</style>

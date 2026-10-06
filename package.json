@@ -1,0 +1,21 @@
+{
+  "name": "cafe-tamarind",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev --port 4323",
+    "start": "astro dev --port 4323",
+    "build": "astro build",
+    "preview": "astro preview --port 4323",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^5.4.2",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

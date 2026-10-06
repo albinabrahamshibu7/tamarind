@@ -1,0 +1,54 @@
+---
+import Layout from '../components/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { business, telLink } from '../data/site';
+---
+
+<Layout title="Page not found | Cafe Tamarind, Pala" description="That page is not on the menu.">
+  <div class="sec theme-pit grain" style="z-index:30">
+    <Header />
+  </div>
+  <main id="main" class="nf sec theme-pit grain">
+    <div class="wrap nf__inner">
+      <h1 class="display h-mega nf__h">Sold out.</h1>
+      <p class="lead muted">This page is not on the menu. The brisket might still be.</p>
+      <div class="nf__ctas">
+        <a href="/" class="btn btn--primary">Back home</a>
+        <a href="/menu" class="btn">See the full menu</a>
+        <a href={telLink} class="btn">Call {business.phoneDisplay}</a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  import '../scripts/main.ts';
+</script>
+
+<style>
+  .nf {
+    padding-block: clamp(80px, 12vw, 180px);
+  }
+  .nf__inner {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 22px;
+  }
+  .nf__h {
+    margin: 0;
+    color: var(--brand);
+  }
+  .nf__inner p {
+    margin: 0;
+  }
+  .nf__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+  }
+</style>

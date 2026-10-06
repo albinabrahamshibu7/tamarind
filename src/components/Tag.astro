@@ -1,0 +1,14 @@
+---
+// AvailabilityTag from the design system. The word carries the state; the colour only helps.
+import { whenLabel, type When } from '../data/site';
+
+interface Props {
+  when: When | 'soldout';
+  label?: string;
+  class?: string;
+}
+const { when, label, class: cls } = Astro.props;
+const text = label ?? (when === 'soldout' ? 'Sold out' : whenLabel[when]);
+---
+
+<span class:list={['tag', `tag--${when}`, cls]}><span class="tag__dot" aria-hidden="true"></span>{text}</span>

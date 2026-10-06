@@ -1,0 +1,368 @@
+---
+import { business, telLink } from '../data/site';
+---
+
+<!-- Sticky call bar on phones: the one floating thing the design system plans for. -->
+<div class="callbar" data-callbar hidden>
+  <span class="callbar__status label" data-open-status>Brisket Sat & Sun from 6 PM</span>
+  <a class="btn btn--primary btn--s" href={telLink}>Call</a>
+</div>
+
+<!-- Order request: sticky pill + review sheet. No prices or totals ever leave the page. -->
+<button class="tray-pill" type="button" data-tray-open aria-haspopup="dialog" aria-controls="tray" hidden>
+  <span class="label">Your order</span>
+  <span class="tray-pill__n" data-tray-count>0</span>
+</button>
+
+<div class="tray-scrim" data-tray-scrim hidden></div>
+<div id="tray" class="order-sheet theme-paper" role="dialog" aria-modal="true" aria-labelledby="tray-h" hidden>
+  <header class="sheet__head">
+    <h2 id="tray-h" class="display">Your order</h2>
+    <button type="button" class="sheet__x" data-tray-close aria-label="Close order">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"></path></svg>
+    </button>
+  </header>
+
+  <ul class="sheet__list" data-tray-list role="list"></ul>
+  <p class="sheet__empty" data-tray-empty>Nothing here yet. Tap any dish on the menu.</p>
+  <p class="sheet__when" data-tray-when hidden></p>
+
+  <fieldset class="sheet__type">
+    <legend class="sr-only">Order type</legend>
+    <label><input type="radio" name="otype" value="Dine in" checked /> <span>Dine in</span></label>
+    <label><input type="radio" name="otype" value="Takeaway" /> <span>Takeaway</span></label>
+  </fieldset>
+
+  <label class="sheet__field">
+    <span>Your name (optional)</span>
+    <input type="text" name="oname" autocomplete="given-name" maxlength="40" />
+  </label>
+  <label class="sheet__field">
+    <span>Day, time, how many people (optional) <small data-note-count hidden></small></span>
+    <textarea name="onote" rows="2" maxlength="200"></textarea>
+  </label>
+
+  <p class="sheet__fine">This sends a request, not a confirmed order. We reply on WhatsApp with what is available and the total.</p>
+
+  <div class="sheet__ctas">
+    <a class="btn btn--primary" data-tray-send target="_blank" rel="noopener noreferrer" aria-disabled="true">Send on WhatsApp</a>
+    <a class="btn" href={telLink}>Call {business.phoneDisplay}</a>
+  </div>
+</div>
+
+<div class="toast" data-toast role="status" aria-live="polite"></div>
+
+<style>
+  /* ---------- call bar (phones) ---------- */
+  .callbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 38;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom));
+    background: var(--char-900);
+    color: var(--ink);
+    box-shadow: var(--shadow-lift);
+    border-top: 1px solid var(--line);
+    animation: bar-in 0.4s var(--ease-out);
+  }
+  .callbar__status {
+    font-size: 11px;
+    color: var(--ink-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @keyframes bar-in {
+    from {
+      transform: translateY(100%);
+    }
+  }
+  @media (max-width: 760px) {
+    .callbar:not([hidden]) {
+      display: flex;
+    }
+  }
+
+  /* ---------- order pill ---------- */
+  .tray-pill {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    z-index: 40;
+    translate: -50% 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 10px 10px 18px;
+    background: var(--brand);
+    color: var(--on-brand);
+    box-shadow: var(--shadow-lift);
+    cursor: pointer;
+    animation: pill-in 0.5s var(--ease-out);
+  }
+  .tray-pill .label {
+    font-size: 13px;
+  }
+  .tray-pill:hover {
+    filter: brightness(1.08);
+  }
+  .tray-pill.bump {
+    animation: bump 0.4s var(--spring);
+  }
+  @keyframes pill-in {
+    from {
+      translate: -50% 120px;
+    }
+  }
+  @keyframes bump {
+    40% {
+      scale: 1.1;
+    }
+  }
+  .tray-pill__n {
+    min-width: 28px;
+    height: 28px;
+    padding-inline: 8px;
+    display: grid;
+    place-items: center;
+    background: var(--char-950);
+    color: var(--paper-100);
+    font: 700 16px/1 var(--font-display);
+  }
+  @media (max-width: 760px) {
+    .tray-pill {
+      bottom: calc(76px + env(safe-area-inset-bottom));
+    }
+  }
+
+  /* ---------- sheet ---------- */
+  .tray-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    animation: fade 0.3s;
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+  .order-sheet {
+    position: fixed;
+    z-index: 51;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: min(440px, 100vw);
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: 26px;
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: var(--shadow-lift);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: sheet-in 0.45s var(--ease-out);
+  }
+  @keyframes sheet-in {
+    from {
+      transform: translateX(105%);
+    }
+  }
+  .sheet__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sheet__head h2 {
+    margin: 0;
+    font-size: 44px;
+  }
+  .sheet__x {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border: 2px solid var(--line-strong);
+    cursor: pointer;
+  }
+  .sheet__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .sheet__list :global(li) {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sheet__list :global(.t-name) {
+    flex: 1;
+    font: 600 16px/22px var(--font-sans);
+  }
+  .sheet__list :global(.t-when) {
+    display: block;
+    font: 600 11px/16px var(--font-sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--status-evening);
+  }
+  .sheet__list :global(.t-when[data-when="weekend"]) {
+    color: var(--status-weekend);
+  }
+  .sheet__list :global(.t-qty) {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+  }
+  .sheet__list :global(.t-qty button) {
+    width: 40px;
+    height: 40px;
+    background: var(--surface-inverse);
+    color: var(--ink-inverse);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .sheet__list :global(.t-qty output) {
+    min-width: 22px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .sheet__empty,
+  .sheet__when {
+    margin: 0;
+    color: var(--ink-muted);
+    font-size: 15px;
+  }
+  .sheet__when {
+    padding: 10px 12px;
+    background: var(--surface-sunken);
+    color: var(--ink);
+  }
+  .sheet__type {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 8px;
+  }
+  .sheet__type label {
+    flex: 1;
+  }
+  .sheet__type input {
+    position: absolute;
+    opacity: 0;
+  }
+  .sheet__type span {
+    display: block;
+    text-align: center;
+    padding: 12px 6px;
+    border: 2px solid var(--line-strong);
+    font: 600 13px/1 var(--font-sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .sheet__type input:checked + span {
+    background: var(--surface-inverse);
+    color: var(--ink-inverse);
+    border-color: var(--surface-inverse);
+  }
+  .sheet__type input:focus-visible + span {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .sheet__field {
+    display: grid;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .sheet__field input,
+  .sheet__field textarea {
+    font: inherit;
+    font-weight: 400;
+    font-size: 16px;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line-strong);
+    background: var(--surface-raised);
+    color: var(--ink);
+    resize: vertical;
+  }
+  .sheet__field input:focus-visible,
+  .sheet__field textarea:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .sheet__fine {
+    margin: 0;
+    font-size: 13px;
+    line-height: 19px;
+    color: var(--ink-muted);
+  }
+  .sheet__ctas {
+    display: grid;
+    gap: 8px;
+    margin-top: auto;
+  }
+  .sheet__ctas [aria-disabled="true"] {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  /* ---------- toast ---------- */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 84px;
+    z-index: 60;
+    translate: -50% 20px;
+    opacity: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--paper-100);
+    color: var(--char-950);
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow: var(--shadow-lift);
+    transition:
+      opacity 0.3s,
+      translate 0.4s var(--ease-out);
+    max-width: calc(100vw - 32px);
+  }
+  .toast.is-on {
+    opacity: 1;
+    translate: -50% 0;
+    pointer-events: auto;
+  }
+  .toast :global(button) {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    color: inherit;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  @media (max-width: 760px) {
+    .toast {
+      bottom: calc(140px + env(safe-area-inset-bottom));
+    }
+  }
+</style>

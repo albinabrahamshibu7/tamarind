@@ -1,0 +1,499 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   CAFE TAMARIND
+   Section flow and motion mechanics follow the High Dive build; colour, type,
+   shape and voice come from /design-system (tokens.json v2). Two themes:
+   Pit (charcoal, default) and Paper (cream). Every section picks one.
+   ========================================================================== */
+
+@property --hero-accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #e2632a;
+}
+
+:root {
+  /* primitives */
+  --char-950: #14110f;
+  --char-900: #1d1916;
+  --char-800: #2a2420;
+  --paper-50: #faf6ef;
+  --paper-100: #f3eadc;
+  --paper-200: #efe4d3;
+  --ember-500: #e2632a;
+  --ember-600: #c24d1a;
+  --ember-700: #9e3d14;
+  --tamarind-700: #5b2f1f;
+  --bark-500: #7a5638;
+  --brick-500: #a4553a;
+  --gold-400: #e8b33c;
+  --leaf-300: #9cc27a;
+  --leaf-700: #3f5c2a;
+  --white: #ffffff;
+
+  --font-display: "Big Shoulders Display", "Arial Narrow", sans-serif;
+  --font-sans: "Archivo", system-ui, sans-serif;
+  --font-ml: "Anek Malayalam", "Noto Sans Malayalam", sans-serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --radius-none: 0px;
+  --radius-sm: 2px;
+  --radius-pill: 999px;
+
+  --gutter: clamp(20px, 3.4vw, 48px);
+  --maxw: 1344px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* a firm settle, not a bounce */
+  --spring: cubic-bezier(0.2, 1.18, 0.32, 1);
+
+  --hero-accent: var(--ember-500);
+  transition: --hero-accent 0.7s var(--ease-out);
+}
+
+/* ---------- themes ---------- */
+:root,
+.theme-pit {
+  --surface: var(--char-950);
+  --surface-raised: var(--char-900);
+  --surface-sunken: var(--char-800);
+  --surface-inverse: var(--paper-100);
+  --ink: var(--paper-100);
+  --ink-muted: #b3a89c;
+  --ink-inverse: var(--char-950);
+  --line: #2f2824;
+  --line-strong: #857a70;
+  --brand: var(--ember-500);
+  --on-brand: var(--char-950);
+  --brand-text: #f08a55;
+  --accent: #d59a78;
+  --status-now: var(--leaf-300);
+  --status-evening: var(--gold-400);
+  --status-weekend: #f08a55;
+  --status-soldout: #b3a89c;
+  --focus: var(--gold-400);
+  --fryd-gold: var(--gold-400);
+  --shadow-lift: 0 1px 0 #2f2824, 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+.theme-paper {
+  --surface: var(--paper-50);
+  --surface-raised: #fffdf8;
+  --surface-sunken: var(--paper-200);
+  --surface-inverse: var(--char-950);
+  --ink: var(--char-900);
+  --ink-muted: #5e554d;
+  --ink-inverse: var(--paper-100);
+  --line: #e0d3bf;
+  --line-strong: #857766;
+  --brand: var(--ember-600);
+  --on-brand: var(--white);
+  --brand-text: var(--ember-700);
+  --accent: var(--tamarind-700);
+  --status-now: var(--leaf-700);
+  --status-evening: #7a5a10;
+  --status-weekend: var(--ember-700);
+  --status-soldout: #5e554d;
+  --focus: var(--ember-700);
+  --fryd-gold: #7a5a10;
+  --shadow-lift: 0 1px 0 #e0d3bf, 0 8px 24px rgba(29, 25, 22, 0.08);
+}
+
+html {
+  color-scheme: dark;
+  -webkit-tap-highlight-color: rgba(226, 99, 42, 0.25);
+  background: var(--char-950);
+  color: var(--paper-100);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+body {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.5;
+  background: var(--surface);
+  color: var(--ink);
+  overflow-x: clip;
+}
+/* body's clip propagates to the viewport, which mobile Chrome ignores when sizing the layout
+   viewport. Clipping at element level keeps pre-reveal offsets out of the scrollable width. */
+main {
+  overflow-x: clip;
+}
+::selection {
+  background: var(--ember-500);
+  color: var(--char-950);
+}
+[hidden] {
+  display: none !important;
+}
+/* anchors land clear of the floating nav */
+[id] {
+  scroll-margin-top: 72px;
+}
+a,
+button {
+  touch-action: manipulation;
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+[lang="ml"] {
+  font-family: var(--font-ml);
+  line-height: 1.6;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 100;
+  background: var(--paper-100);
+  color: var(--char-950);
+  padding: 10px 16px;
+  font-weight: 600;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: calc(var(--maxw) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ---------- surfaces ---------- */
+.sec {
+  position: relative;
+  isolation: isolate;
+  background: var(--surface);
+  color: var(--ink);
+}
+/* smoke grain on charcoal grounds */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- type ---------- */
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+.h-mega {
+  font-size: clamp(2.3rem, 12.4vw, 11.5rem);
+}
+.h2 {
+  font-size: clamp(3rem, 6.4vw, 5.75rem);
+}
+.h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(1.5rem, 2.1vw, 1.75rem);
+  line-height: 1.12;
+  letter-spacing: 0.02em;
+}
+.lead {
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  line-height: 1.4;
+}
+.body-l {
+  font-size: clamp(1.02rem, 1.25vw, 1.15rem);
+  line-height: 1.5;
+}
+.label {
+  font: 600 12px/16px var(--font-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.muted {
+  color: var(--ink-muted);
+}
+
+/* ---------- buttons (design-system Button: quiet, primary, inverse) ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-none);
+  border: 2px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+  font: 600 14px/1 var(--font-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.3s var(--spring),
+    filter 0.2s,
+    background-color 0.25s,
+    color 0.25s,
+    border-color 0.25s;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+}
+.btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+.btn--primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--on-brand);
+}
+.btn--primary:hover {
+  border-color: var(--brand);
+  filter: brightness(1.08);
+}
+.btn--inverse {
+  background: var(--surface-inverse);
+  border-color: var(--surface-inverse);
+  color: var(--ink-inverse);
+}
+.btn--inverse:hover {
+  border-color: var(--surface-inverse);
+  filter: brightness(1.08);
+}
+.btn--s {
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  font-size: 12px;
+}
+
+/* ---------- availability tag (the only pill in the system) ---------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: 24px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  border: 1px solid currentColor;
+  font: 600 12px/16px var(--font-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.tag__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+}
+.tag--now {
+  color: var(--status-now);
+}
+.tag--evening {
+  color: var(--status-evening);
+}
+.tag--weekend {
+  color: var(--status-weekend);
+}
+.tag--soldout {
+  color: var(--status-soldout);
+}
+.tag--soldout .tag__dot {
+  background: transparent;
+  border: 1.5px solid currentColor;
+}
+
+/* ---------- price ---------- */
+.price {
+  font: 700 24px/28px var(--font-display);
+  color: var(--brand-text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+/* 2025 sheet price: still the newest one photographed, not yet reconfirmed */
+.price--dated::after {
+  content: "*";
+  margin-left: 1px;
+  font-size: 0.7em;
+  vertical-align: 0.35em;
+  color: var(--ink-muted);
+}
+
+/* ---------- photo print: square, paper border, no shadow ---------- */
+.print {
+  background: #fffdf8;
+  padding: 8px;
+  outline: 1px solid var(--line);
+}
+.print > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- dish: round photo or plate cutout, an ember tile turning behind it ---------- */
+.dish {
+  position: relative;
+  width: var(--d, 260px);
+  aspect-ratio: 1;
+}
+.dish__tile {
+  position: absolute;
+  inset: 8%;
+  background: var(--brand);
+  transition: transform 0.6s var(--spring);
+}
+.dish__img {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--ink);
+  background: var(--surface-sunken);
+  transition: transform 0.8s var(--spring);
+}
+.dish__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dish:hover .dish__img,
+.dish-host:hover .dish__img {
+  transform: rotate(14deg) scale(1.05);
+}
+.dish:hover .dish__tile,
+.dish-host:hover .dish__tile {
+  transform: rotate(-8deg) scale(1.03);
+}
+/* transparent plate cutout: the plate is its own circle, so no clip or ring; the shadow follows it */
+.dish--plate .dish__img {
+  border: 0;
+  overflow: visible;
+  background: none;
+}
+/* the cutouts carry 2% transparent padding, so the shadow circle sits 2% in */
+.dish--plate .dish__img::before {
+  content: "";
+  position: absolute;
+  inset: 2%;
+  border-radius: 50%;
+  box-shadow: 0 18px 28px rgba(0, 0, 0, 0.4);
+}
+.dish--plate .dish__img img {
+  position: relative;
+  object-fit: contain;
+}
+
+/* ---------- slices: the brand's one literal motif (hairline rules, brisket slices) ---------- */
+.slices {
+  display: block;
+  width: 56px;
+  height: 28px;
+  color: var(--brand-text);
+}
+
+/* ---------- marquees ---------- */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+}
+.marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  min-width: 100%;
+  align-items: center;
+  animation: marquee var(--dur, 40s) linear infinite;
+}
+.marquee--rev .marquee__track {
+  animation-direction: reverse;
+}
+.marquee:hover .marquee__track.pausable {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+/* ---------- reveal on scroll ---------- */
+[data-reveal] {
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 0.9s var(--ease-out);
+  transition-delay: var(--delay, 0s);
+}
+.js [data-reveal]:not(.is-in) {
+  opacity: 0;
+}
+.js [data-reveal="up"]:not(.is-in) {
+  transform: translateY(48px);
+}
+.js [data-reveal="pop"]:not(.is-in) {
+  transform: scale(0.86) rotate(-3deg);
+}
+.js [data-reveal="left"]:not(.is-in) {
+  transform: translateX(-64px) rotate(-4deg);
+}
+.js [data-reveal="right"]:not(.is-in) {
+  transform: translateX(64px) rotate(4deg);
+}
+.js [data-reveal="fade"]:not(.is-in) {
+  transform: none;
+}
+
+/* split letters */
+.char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .marquee__track {
+    animation: none !important;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,63 @@
+---
+import Layout from '../components/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { business } from '../data/site';
+---
+
+<Layout title="Privacy | Cafe Tamarind, Pala" description="How the Cafe Tamarind website handles your data: it stores nothing about you.">
+  <div class="sec theme-pit grain" style="z-index:30">
+    <Header />
+  </div>
+  <main id="main" class="pp sec theme-paper">
+    <div class="wrap pp__inner">
+      <h1 class="display h2">Privacy</h1>
+      <p class="body-l">This website stores nothing about you, so there is nothing to leak.</p>
+
+      <h2 class="h3">Order requests</h2>
+      <p>
+        When you build an order and tap “Send on WhatsApp”, the site writes a message and hands it to your own WhatsApp app,
+        addressed to {business.phoneDisplay}. The site itself never sends anything anywhere. Your name and note are optional.
+      </p>
+
+      <h2 class="h3">What stays on your device</h2>
+      <p>Your order is kept in this browser tab's session storage for up to two hours, then forgotten. Nobody else can read it.</p>
+
+      <h2 class="h3">No cookies, no tracking</h2>
+      <p>No accounts, no payments, no analytics, no cookies. Fonts are loaded from Google Fonts.</p>
+
+      <h2 class="h3">Questions</h2>
+      <p>Call {business.phoneDisplay} or visit us at {business.addressLines.join(', ')}.</p>
+
+      <p><a href="/" class="btn btn--inverse">Back home</a></p>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  import '../scripts/main.ts';
+</script>
+
+<style>
+  .pp {
+    padding-block: clamp(60px, 8vw, 120px);
+  }
+  .pp__inner {
+    max-width: 760px;
+  }
+  .pp h1 {
+    margin: 0 0 20px;
+  }
+  .pp h2 {
+    margin: 40px 0 10px;
+    color: var(--accent);
+  }
+  .pp p {
+    margin: 0;
+    line-height: 1.55;
+  }
+  .pp p:last-child {
+    margin-top: 44px;
+  }
+</style>

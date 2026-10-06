@@ -1,0 +1,114 @@
+---
+import Tag from './Tag.astro';
+import { business, waLink, telLink } from '../data/site';
+
+// Scrubbed in letter by letter as you scroll.
+const lines = ['CALL AHEAD.', 'THE BRISKET', 'RUNS OUT.'];
+const total = lines.join('').replace(/ /g, '').length;
+let n = 0;
+---
+
+<section id="order" class="order sec theme-paper" data-progress="enter" aria-labelledby="order-h">
+  <div class="wrap order__grid">
+    <h2 id="order-h" class="display order__h">
+      <span class="sr-only">Call ahead. The brisket runs out.</span>
+      {
+        lines.map((l) => (
+          <span class="order__line" aria-hidden="true">
+            {[...l].map((ch) =>
+              ch === ' ' ? (
+                <span class="char">&nbsp;</span>
+              ) : (
+                <span class="char order__char" style={`--t:${(n++ / total).toFixed(3)}`}>
+                  {ch}
+                </span>
+              ),
+            )}
+          </span>
+        ))
+      }
+    </h2>
+
+    <div class="order__side">
+      <p class="order__tags"><Tag when="weekend" /><Tag when="soldout" label="Until sold out" /></p>
+      <p class="body-l">
+        Brisket is smoked for Saturday and Sunday only. When the last one is sliced, it is sold out until the next weekend. Call and we will hold your portion. Ribs, belly and pulled pork are on every evening from 6 PM.
+      </p>
+      <div class="order__ctas">
+        <a class="btn btn--primary" href={telLink}>Call to reserve brisket</a>
+        <a class="btn" href={waLink('Hi Cafe Tamarind. I would like to reserve brisket.')} target="_blank" rel="noopener noreferrer">Message on WhatsApp</a>
+      </div>
+      <p class="order__fine">{business.phoneDisplay} · {business.hoursLong}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .order {
+    --p: 0;
+    padding-block: clamp(80px, 10vw, 160px) clamp(60px, 8vw, 110px);
+  }
+  .order__grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: clamp(32px, 5vw, 80px);
+    align-items: start;
+  }
+  .order__h {
+    position: relative;
+    margin: 0;
+    font-size: clamp(3.6rem, 9.6vw, 8.8rem);
+    color: var(--ink);
+  }
+  .order__line {
+    display: block;
+    white-space: nowrap;
+  }
+  .order__line:last-child {
+    color: var(--brand-text);
+  }
+  .order__char {
+    --v: clamp(0, calc((var(--p) * 1.25 - var(--t) * 0.85) * 6), 1);
+    opacity: calc(0.14 + var(--v) * 0.86);
+    transform: translateY(calc((1 - var(--v)) * 0.12em));
+  }
+  .order__side {
+    padding-top: clamp(8px, 2vw, 30px);
+    max-width: 460px;
+    --s: clamp(0, calc((var(--p) - 0.25) * 4), 1);
+    opacity: var(--s);
+    transform: translateY(calc((1 - var(--s)) * 30px));
+  }
+  .order__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 18px;
+  }
+  .order__side .body-l {
+    margin: 0 0 24px;
+  }
+  .order__ctas {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .order__fine {
+    margin: 18px 0 0;
+    font-size: 14px;
+    color: var(--ink-muted);
+  }
+  @media (max-width: 860px) {
+    .order__grid {
+      grid-template-columns: 1fr;
+    }
+    .order__h {
+      font-size: min(15.5vw, 6.5rem);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .order {
+      --p: 1 !important;
+    }
+  }
+</style>

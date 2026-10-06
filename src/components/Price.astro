@@ -1,0 +1,19 @@
+---
+interface Props {
+  value: number | null;
+  /** price from a 2025 menu sheet, not yet reconfirmed */
+  dated?: boolean;
+}
+const { value, dated = false } = Astro.props;
+---
+
+{
+  value == null ? (
+    <span class="price">Ask</span>
+  ) : (
+    <span class:list={['price', { 'price--dated': dated }]} title={dated ? 'From the 2025 menu sheet. May have changed.' : undefined}>
+      ₹{value}
+      {dated && <span class="sr-only"> (2025 price)</span>}
+    </span>
+  )
+}

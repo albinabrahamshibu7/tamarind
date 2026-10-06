@@ -1,0 +1,49 @@
+---
+import Layout from '../components/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Specials from '../components/Specials.astro';
+import Loud from '../components/Loud.astro';
+import Menu from '../components/Menu.astro';
+import Ticker from '../components/Ticker.astro';
+import Difference from '../components/Difference.astro';
+import Reviews from '../components/Reviews.astro';
+import Gallery from '../components/Gallery.astro';
+import WhyUs from '../components/WhyUs.astro';
+import Strip from '../components/Strip.astro';
+import OrderBold from '../components/OrderBold.astro';
+import Connect from '../components/Connect.astro';
+import Footer from '../components/Footer.astro';
+import Floating from '../components/Floating.astro';
+---
+
+<Layout
+  title="Cafe Tamarind | Texas-style smokehouse in Kollappally, Pala"
+  description="Beef brisket smoked 16 hours, Saturdays and Sundays from 6 PM until sold out. Pork ribs, belly and pulled pork daily from 6 PM. Al-faham, momos and burgers from 12:30 PM."
+>
+  <div class="sec theme-pit grain" style="z-index:30">
+    <Header />
+  </div>
+  <main id="main">
+    <Hero />
+    <About />
+    <Specials />
+    <Loud />
+    <Menu />
+    <Ticker />
+    <Difference />
+    <Reviews />
+    <Gallery />
+    <WhyUs />
+    <Strip />
+    <OrderBold />
+    <Connect />
+  </main>
+  <Footer />
+  <Floating />
+</Layout>
+
+<script>
+  import '../scripts/main.ts';
+</script>

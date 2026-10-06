@@ -1,0 +1,130 @@
+---
+// Scroll-scrubbed headline: letters ink in one by one while the section is pinned.
+// The line is the rule itself: when the smoker opens and when it stops.
+import Tag from './Tag.astro';
+
+const words = ['FROM 6 PM.', 'UNTIL SOLD OUT.'];
+const total = words.join('').replace(/ /g, '').length;
+let n = 0;
+const tags: { when: 'now' | 'evening' | 'weekend' | 'soldout'; label?: string; x: string; y: string; r: string; at: number }[] = [
+  { when: 'now', label: 'Kitchen · from 12:30 PM', x: '10%', y: '9%', r: '-5deg', at: 0.16 },
+  { when: 'evening', label: 'Ribs · from 6 PM', x: '70%', y: '6%', r: '4deg', at: 0.3 },
+  { when: 'weekend', x: '68%', y: '88%', r: '-3deg', at: 0.44 },
+  { when: 'soldout', x: '14%', y: '90%', r: '5deg', at: 0.6 },
+];
+---
+
+<section class="loud sec theme-pit grain" data-progress="sticky" aria-labelledby="loud-h">
+  <div class="loud__pin">
+    <div class="loud__inner wrap">
+      <h2 id="loud-h" class="display h-mega loud__h">
+        <span class="sr-only">From 6 PM. Until sold out.</span>
+        {
+          words.map((w) => (
+            <span class="loud__line" aria-hidden="true">
+              {[...w].map((ch) =>
+                ch === ' ' ? (
+                  <span class="char">&nbsp;</span>
+                ) : (
+                  <span class="char loud__char" style={`--t:${(n++ / total).toFixed(3)}`}>
+                    {ch}
+                  </span>
+                ),
+              )}
+            </span>
+          ))
+        }
+      </h2>
+      <p class="lead loud__sub">Brisket on Saturdays and Sundays only. Everything else from the smoker, every evening.</p>
+      {
+        tags.map((t) => (
+          <span class="loud__tag" style={`--x:${t.x};--y:${t.y};--r:${t.r};--at:${t.at}`} aria-hidden="true">
+            <Tag when={t.when} label={t.label} />
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .loud {
+    --p: 0;
+    height: 210vh;
+    margin-top: -1px;
+  }
+  .loud__pin {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .loud__inner {
+    position: relative;
+    text-align: center;
+    padding-block: 120px;
+  }
+  .loud__h {
+    color: var(--brand);
+    margin: 0;
+  }
+  .loud__line {
+    display: block;
+    white-space: nowrap;
+  }
+  .loud__char {
+    --v: clamp(0, calc((var(--p) * 1.35 - var(--t) * 0.9) * 7), 1);
+    opacity: calc(0.1 + var(--v) * 0.9);
+    transform: translateY(calc((1 - var(--v)) * 0.14em));
+  }
+  .loud__sub {
+    max-width: 30ch;
+    margin: 30px auto 0;
+    color: var(--ink-muted);
+    opacity: clamp(0, calc((var(--p) - 0.6) * 5), 1);
+    transform: translateY(calc((1 - clamp(0, calc((var(--p) - 0.6) * 5), 1)) * 20px));
+  }
+  .loud__tag {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    padding: 8px 10px;
+    background: var(--char-950);
+    --b: clamp(0, calc((var(--p) - var(--at)) * 9), 1);
+    opacity: var(--b);
+    transform: scale(calc(0.6 + var(--b) * 0.4)) rotate(calc(var(--r) * var(--b)));
+    z-index: 2;
+  }
+  /* phones: the headline fills the width, so the tags move above and below it */
+  @media (max-width: 700px) {
+    .loud__tag:nth-of-type(1) {
+      left: 4%;
+      top: 4%;
+    }
+    .loud__tag:nth-of-type(2) {
+      left: 42%;
+      top: 13%;
+    }
+    .loud__tag:nth-of-type(3) {
+      left: 30%;
+      top: 84%;
+    }
+    .loud__tag:nth-of-type(4) {
+      left: 6%;
+      top: 93%;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .loud {
+      height: auto;
+      --p: 1 !important;
+    }
+    .loud__pin {
+      position: static;
+      height: auto;
+    }
+  }
+</style>

@@ -1,0 +1,148 @@
+---
+import Price from './Price.astro';
+import Tag from './Tag.astro';
+import { reasons, allDayPicks } from '../data/site';
+---
+
+<section class="why sec theme-pit grain" aria-labelledby="why-h">
+  <div class="wrap why__grid">
+    <div>
+      <h2 id="why-h" class="display h2 why__h" data-reveal="up">Before<br />you come</h2>
+      <ul class="why__list" role="list">
+        {
+          reasons.map((r, i) => (
+            <li class="why__item" data-reveal="up" style={`--delay:${(i % 2) * 0.08 + Math.floor(i / 2) * 0.1}s`}>
+              <span class="why__fig display">{r.figure}</span>
+              <h3 class="h3 why__t">{r.title}</h3>
+              <p>{r.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="why__fav">
+      <p class="display why__fav-h" data-reveal="up">Here at lunch?</p>
+      <p class="why__fav-sub" data-reveal="up" style="--delay:.06s">The smoker needs until 6. The kitchen is ready now.</p>
+      <ul class="why__dishes" role="list">
+        {
+          allDayPicks.map((d, i) => (
+            <li class="why__dish dish-host" data-reveal="pop" style={`--delay:${0.1 + i * 0.12}s`}>
+              <div class:list={['dish', { 'dish--plate': d.plate }]} style="--d:min(40vw,clamp(170px,17vw,240px))">
+                <span class="dish__tile" />
+                <span class="dish__img">
+                  <img src={d.image} alt={d.alt} width="560" height="560" loading="lazy" decoding="async" />
+                </span>
+              </div>
+              <h3 class="h3">{d.name}</h3>
+              <Tag when={d.when} />
+              <button type="button" class="why__add" data-add={d.id} aria-label={`Add ${d.name} to your order`}>
+                <Price value={d.price} dated={d.dated} />
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn" href="/menu" data-reveal="up">See the full menu</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .why {
+    padding-block: clamp(80px, 9vw, 140px) clamp(80px, 9vw, 140px);
+    margin-top: -1px;
+  }
+  .why__grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: clamp(48px, 6vw, 100px);
+    align-items: center;
+  }
+  .why__h {
+    margin: 0 0 clamp(36px, 4vw, 60px);
+  }
+  .why__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 4vw, 48px) clamp(20px, 3vw, 44px);
+    max-width: 600px;
+  }
+  .why__item {
+    display: grid;
+    gap: 6px;
+    justify-items: start;
+    padding-top: 16px;
+    border-top: 1px solid var(--line-strong);
+  }
+  .why__fig {
+    font-size: clamp(2.2rem, 3.4vw, 3rem);
+    color: var(--brand);
+    margin-bottom: 6px;
+  }
+  .why__t {
+    margin: 0;
+    font-size: 20px;
+  }
+  .why__item p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 22px;
+    color: var(--ink-muted);
+    max-width: 28ch;
+  }
+  .why__fav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .why__fav-h {
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    margin: 0;
+  }
+  .why__fav-sub {
+    margin: 10px 0 clamp(28px, 3vw, 44px);
+    color: var(--ink-muted);
+  }
+  .why__dishes {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 36px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(28px, 3.4vw, 52px);
+  }
+  .why__dish {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .why__dish h3 {
+    margin: 26px 0 0;
+    max-width: 12ch;
+  }
+  .why__add {
+    cursor: pointer;
+  }
+  .why__add::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  @media (max-width: 900px) {
+    .why__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 460px) {
+    .why__list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

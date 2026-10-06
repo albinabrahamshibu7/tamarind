@@ -1,0 +1,51 @@
+---
+import { tickerRows } from '../data/site';
+---
+
+<section class="ticker sec theme-pit grain" aria-label={`From our kitchens: ${tickerRows.flat().join(', ')}`}>
+  {
+    tickerRows.map((row, r) => (
+      <div class:list={['marquee', 'ticker__row', { 'marquee--rev': r % 2 === 1 }]} style={`--dur:${38 + r * 7}s`} aria-hidden="true">
+        {[0, 1].map(() => (
+          <div class="marquee__track">
+            {[...row, ...row].map((word) => (
+              <span class="ticker__item">
+                <span class="display">{word}</span>
+                <span class="ticker__cut" />
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  .ticker {
+    padding-block: clamp(20px, 4vw, 60px) clamp(60px, 8vw, 120px);
+    display: grid;
+    gap: 0;
+  }
+  .ticker__row {
+    color: var(--brand);
+  }
+  .ticker__row:nth-child(2) {
+    color: var(--ink);
+  }
+  .ticker__item {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(20px, 2.4vw, 40px);
+    padding-right: clamp(20px, 2.4vw, 40px);
+    font-size: clamp(3.4rem, 11.7vw, 10.5rem);
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .ticker__cut {
+    width: 0.16em;
+    height: 0.16em;
+    background: currentColor;
+    opacity: 0.55;
+  }
+</style>

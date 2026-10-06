@@ -1,0 +1,122 @@
+---
+import SlabEdge from './SlabEdge.astro';
+import { about, business } from '../data/site';
+
+const layout = [
+  { cls: 'a', rot: '-3deg', reveal: 'left' },
+  { cls: 'b', rot: '4deg', reveal: 'right' },
+  { cls: 'c', rot: '-1.5deg', reveal: 'up' },
+];
+---
+
+<section id="about" class="about sec theme-paper">
+  <SlabEdge at="top" seed={4} />
+  <div class="wrap about__grid">
+    <div class="about__collage">
+      {
+        about.photos.map((p, i) => {
+          const l = layout[i];
+          return (
+            <div class:list={['about__photo', `about__photo--${l.cls}`]} data-reveal={l.reveal} style={`--rot:${l.rot};--delay:${i * 0.12}s`}>
+              <div class="print">
+                <img src={p.src} alt={p.alt} width="900" height="900" loading="lazy" decoding="async" />
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+
+    <div class="about__copy">
+      <p class="label about__eyebrow" data-reveal="up">{business.descriptor}</p>
+      <h2 class="display h2" data-reveal="up">Pala's<br />smokehouse</h2>
+      <p class="about__ml" lang="ml" data-reveal="up" style="--delay:.05s">{business.nameMl}</p>
+      {about.paragraphs.map((p, i) => <p class="body-l" data-reveal="up" style={`--delay:${0.1 + i * 0.08}s`}>{p}</p>)}
+      <a href="#difference" class="btn btn--inverse" data-reveal="up" style="--delay:.26s">How we smoke</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    padding-block: clamp(130px, 15vw, 230px) clamp(60px, 8vw, 120px);
+  }
+  .about__grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: clamp(40px, 6vw, 120px);
+    align-items: center;
+  }
+  .about__collage {
+    position: relative;
+    aspect-ratio: 1 / 0.92;
+    max-width: 640px;
+  }
+  .about__photo {
+    position: absolute;
+    rotate: var(--rot);
+  }
+  .about__photo .print {
+    width: 100%;
+    aspect-ratio: 1;
+    transition: transform 0.5s var(--spring);
+  }
+  .about__photo--a {
+    left: 0;
+    top: 4%;
+    width: 60%;
+    z-index: 1;
+  }
+  .about__photo--b {
+    right: 2%;
+    top: 22%;
+    width: 36%;
+    z-index: 2;
+  }
+  .about__photo--c {
+    left: 20%;
+    bottom: -2%;
+    width: 42%;
+    z-index: 3;
+  }
+  .about__photo:hover {
+    z-index: 5;
+  }
+  .about__photo:hover .print {
+    transform: scale(1.04) rotate(1deg);
+  }
+  .about__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    max-width: 460px;
+  }
+  .about__eyebrow {
+    margin: 0;
+    color: var(--accent);
+  }
+  .about__copy h2 {
+    margin: 0;
+  }
+  .about__ml {
+    margin: -6px 0 8px;
+    font-size: 20px;
+    color: var(--accent);
+  }
+  .about__copy p {
+    margin: 0;
+  }
+  .about__copy .btn {
+    margin-top: 14px;
+  }
+  @media (max-width: 860px) {
+    .about__grid {
+      grid-template-columns: 1fr;
+    }
+    .about__collage {
+      width: 100%;
+      margin-inline: auto;
+    }
+  }
+</style>

@@ -1,0 +1,28 @@
+---
+// The six logo cuts are drawn files; never typeset the name as a stand-in (design-system rule).
+interface Props {
+  variant?: 'vertical' | 'horizontal' | 'badge' | 'wordmark' | 'wordmark-simple' | 'icon';
+  /** file colour: pick by the ground it sits on */
+  tone?: 'cream' | 'ember' | 'ember-lit' | 'charcoal' | 'tamarind' | 'brand' | 'brand-on-dark';
+  height?: number;
+  class?: string;
+}
+const { variant = 'wordmark-simple', tone = 'cream', height = 44, class: cls } = Astro.props;
+const ratio: Record<string, number> = {
+  'wordmark-simple': 1151 / 413,
+  wordmark: 1192 / 546,
+  vertical: 1651 / 1738,
+  horizontal: 2199 / 1087,
+  badge: 1485 / 1494,
+  icon: 848 / 1029,
+};
+---
+
+<img
+  class:list={['logo', cls]}
+  src={`/logo/tamarind-${variant}-${tone}.svg`}
+  alt="Cafe Tamarind"
+  height={height}
+  width={Math.round(height * ratio[variant])}
+  style={`height:${height}px;width:auto`}
+/>

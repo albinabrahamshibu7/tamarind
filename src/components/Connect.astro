@@ -1,0 +1,157 @@
+---
+import Logo from './Logo.astro';
+import { business, fryd, waLink, telLink } from '../data/site';
+---
+
+<section id="contact" class="con sec theme-paper" aria-labelledby="con-h">
+  <div class="wrap con__grid">
+    <div class="con__media" data-reveal="pop">
+      <div class="con__card">
+        <span class="con__slab" aria-hidden="true"></span>
+        <div class="con__logo">
+          <Logo variant="vertical" tone="ember" height={260} />
+        </div>
+      </div>
+    </div>
+
+    <div class="con__info">
+      <h2 id="con-h" class="display h2" data-reveal="up">Find<br />the smoke</h2>
+
+      <div class="con__block" data-reveal="up" style="--delay:.08s">
+        <h3 class="h3">Where</h3>
+        <address>
+          <a href={business.mapUrl} target="_blank" rel="noopener noreferrer" class="con__line">{business.addressLines.join(', ')}</a>
+        </address>
+        <p class="con__line muted">About 8 km from Pala town. Roadside parking only.</p>
+        <a class="btn btn--inverse con__dir" href={business.mapUrl} target="_blank" rel="noopener noreferrer">Get directions</a>
+      </div>
+
+      <div class="con__row">
+        <div class="con__block" data-reveal="up" style="--delay:.14s">
+          <h3 class="h3">When</h3>
+          <p class="con__line">{business.hoursShort}<br /><span class="muted">Wednesday till 10 PM</span></p>
+        </div>
+        <div class="con__block" data-reveal="up" style="--delay:.2s">
+          <h3 class="h3">Call</h3>
+          <a class="con__line" href={telLink}>{business.phoneDisplay}</a>
+          <a class="con__line muted" href={waLink('Hi Cafe Tamarind.')} target="_blank" rel="noopener noreferrer">or WhatsApp</a>
+        </div>
+        <div class="con__block" data-reveal="up" style="--delay:.26s">
+          <h3 class="h3">Instagram</h3>
+          <a class="con__line" href={business.instagramUrl} target="_blank" rel="noopener noreferrer">@{business.instagramHandle}</a>
+        </div>
+      </div>
+
+      <aside class="con__fryd" data-reveal="up" style="--delay:.3s" aria-label={`${fryd.name} ${fryd.endorsement}`}>
+        <p class="con__fryd-name display">{fryd.name} <span class="label">{fryd.endorsement}</span></p>
+        <p class="con__line muted">{fryd.range}. {fryd.address}. {fryd.hours}.</p>
+        <a class="con__line con__fryd-link" href={fryd.url} target="_blank" rel="noopener noreferrer">@thefryd2026</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .con {
+    padding-block: clamp(60px, 8vw, 120px) clamp(90px, 10vw, 150px);
+  }
+  .con__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: clamp(40px, 6vw, 100px);
+    align-items: center;
+  }
+  .con__media {
+    justify-self: center;
+  }
+  .con__card {
+    position: relative;
+    rotate: -2deg;
+  }
+  .con__slab {
+    position: absolute;
+    inset: 0;
+    background: var(--tamarind-700);
+    translate: 18px 18px;
+  }
+  .con__logo {
+    position: relative;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    padding: clamp(28px, 4vw, 52px);
+  }
+  .con__info h2 {
+    margin: 0 0 clamp(28px, 3.4vw, 48px);
+  }
+  .con__block {
+    display: grid;
+    gap: 6px;
+    justify-items: start;
+  }
+  .con__block h3 {
+    margin: 0 0 4px;
+    color: var(--accent);
+  }
+  address {
+    font-style: normal;
+  }
+  .con__line {
+    margin: 0;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  @media (pointer: coarse) {
+    a.con__line {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+  a.con__line:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .con__dir {
+    margin-top: 12px;
+  }
+  .con__row {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+    gap: 24px clamp(24px, 3.4vw, 56px);
+    margin-top: clamp(32px, 4vw, 52px);
+  }
+  .con__fryd {
+    margin-top: clamp(32px, 4vw, 52px);
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 6px;
+    max-width: 520px;
+  }
+  .con__fryd-name {
+    margin: 0;
+    font-size: 28px;
+    color: var(--fryd-gold);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .con__fryd-name .label {
+    color: var(--ink-muted);
+  }
+  .con__fryd-link {
+    color: var(--fryd-gold);
+    font-weight: 600;
+  }
+  @media (max-width: 860px) {
+    .con__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 520px) {
+    .con__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

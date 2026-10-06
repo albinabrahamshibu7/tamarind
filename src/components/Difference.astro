@@ -1,0 +1,144 @@
+---
+import SlabEdge from './SlabEdge.astro';
+import Slices from './Slices.astro';
+import { beats } from '../data/site';
+---
+
+<section id="difference" class="diff sec theme-pit grain" aria-labelledby="diff-h">
+  <div class="wrap">
+    <header class="diff__head">
+      <h2 id="diff-h" class="display h2" data-reveal="up">Low heat,<br />long hours</h2>
+      <p class="lead muted" data-reveal="up" style="--delay:.08s">No shortcuts in a smoker. Here is what that means on your tray.</p>
+    </header>
+
+    <div class="diff__grid">
+      <ul class="diff__col" role="list">
+        {
+          beats.slice(0, 2).map((b, i) => (
+            <li class="diff__beat" data-reveal="left" style={`--delay:${i * 0.12}s`}>
+              <Slices />
+              <h3 class="h3">{b.title}</h3>
+              <p>{b.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="diff__photo" data-reveal="pop">
+        <div class="print">
+          <img src="/photos/pulled-beef-tray.webp" alt="Pulled beef, toasted bread and pickles on a steel tray" width="900" height="1120" loading="lazy" decoding="async" />
+        </div>
+      </div>
+
+      <ul class="diff__col" role="list">
+        {
+          beats.slice(2).map((b, i) => (
+            <li class="diff__beat" data-reveal="right" style={`--delay:${i * 0.12}s`}>
+              <Slices />
+              <h3 class="h3">{b.title}</h3>
+              <p>{b.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="diff__cta" data-reveal="up">
+      <a class="btn" href="#reviews">Read the reviews</a>
+    </div>
+  </div>
+  <SlabEdge at="bottom" seed={21} />
+</section>
+
+<style>
+  .diff {
+    padding-block: clamp(40px, 6vw, 80px) clamp(170px, 17vw, 270px);
+  }
+  /* this edge belongs to the paper section below, so its slabs are paper */
+  .diff :global(.slab-edge rect) {
+    fill: var(--paper-50) !important;
+  }
+  .diff :global(.slab-edge line) {
+    stroke: var(--char-900);
+    opacity: 0.25;
+  }
+  .diff__head {
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+    margin-bottom: clamp(40px, 6vw, 80px);
+  }
+  .diff__head h2,
+  .diff__head p {
+    margin: 0;
+  }
+  .diff__head p {
+    max-width: 34ch;
+  }
+  .diff__grid {
+    display: grid;
+    grid-template-columns: 1fr minmax(260px, 400px) 1fr;
+    gap: clamp(24px, 4vw, 64px);
+    align-items: center;
+    max-width: 1100px;
+    margin-inline: auto;
+  }
+  .diff__col {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: clamp(40px, 5vw, 80px);
+  }
+  .diff__beat {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 10px;
+  }
+  .diff__beat h3 {
+    margin: 6px 0 0;
+  }
+  .diff__beat p {
+    margin: 0;
+    font-size: 16px;
+    color: var(--ink-muted);
+    max-width: 24ch;
+  }
+  .diff__photo {
+    rotate: 2deg;
+  }
+  .diff__photo .print {
+    aspect-ratio: 4 / 5;
+    outline: 0;
+    transition: transform 0.5s var(--spring);
+  }
+  .diff__photo:hover .print {
+    transform: rotate(-2deg) scale(1.02);
+  }
+  .diff__cta {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(40px, 5vw, 64px);
+  }
+  @media (max-width: 860px) {
+    .diff__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .diff__photo {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      max-width: 340px;
+      margin-inline: auto;
+    }
+  }
+  @media (max-width: 460px) {
+    .diff__grid {
+      grid-template-columns: 1fr;
+    }
+    .diff__photo {
+      grid-row: auto;
+    }
+  }
+</style>

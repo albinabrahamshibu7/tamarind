@@ -1,0 +1,262 @@
+---
+import Price from './Price.astro';
+import Tag from './Tag.astro';
+import { menuCard, business, telLink } from '../data/site';
+
+// Two balanced columns, organised by when. The call card sits in the right column like the reference's promo.
+const left = menuCard.filter((_, i) => i % 2 === 0);
+const right = menuCard.filter((_, i) => i % 2 === 1);
+---
+
+<section id="menu" class="menu sec theme-pit grain" aria-labelledby="menu-h">
+  <div class="wrap">
+    <div class="menu__card theme-paper" data-progress="enter">
+      <header class="menu__head">
+        <h2 id="menu-h" class="display h2">Menu</h2>
+        <ul class="menu__badges" role="list">
+          <li><span class="menu__fig">{business.rating}</span>on Google, {business.reviewCount} reviews</li>
+          <li><span class="menu__fig">2018</span>smoking in Pala since</li>
+        </ul>
+      </header>
+
+      <div class="menu__body">
+        <p class="menu__note">
+          Tap a dish to add it to your order. Smokehouse prices are from the September 2026 menu.
+          Prices marked <span class="price price--dated menu__note-star">₹</span> are from 2025 sheets and may have changed. 5% GST extra.
+        </p>
+        {
+          [left, right].map((col, ci) => (
+            <div class="menu__col">
+              {col.map((cat) => (
+                <div class="menu__cat" id={`cat-${cat.id}`}>
+                  <div class="menu__cat-head">
+                    <h3 class="display menu__cat-h">{cat.title}</h3>
+                    <Tag when={cat.when} />
+                  </div>
+                  {cat.note && <p class="menu__cat-note">{cat.note}</p>}
+                  <ul class="menu__list" role="list">
+                    {cat.items.map((it) => (
+                      <li>
+                        <button class="menu__row" type="button" data-add={it.id}>
+                          <span class="menu__names">
+                            <span class="menu__name">{it.name}</span>
+                            {it.desc && <span class="menu__desc">{it.desc}</span>}
+                          </span>
+                          <Price value={it.price} dated={it.dated} />
+                          <span class="menu__add" aria-hidden="true">+</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              {ci === 1 && (
+                <aside class="menu__promo" aria-label="Reserve brisket">
+                  <p class="label">Sat & Sun · from 6 PM</p>
+                  <p class="display menu__promo-h">The brisket runs out. Call ahead.</p>
+                  <a class="btn btn--inverse" href={telLink}>Call {business.phoneDisplay}</a>
+                </aside>
+              )}
+            </div>
+          ))
+        }
+        <p class="menu__more">
+          <a class="btn" href="/menu">See the full menu</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .menu {
+    --p: 0;
+    padding-block: clamp(40px, 6vw, 100px) clamp(80px, 10vw, 160px);
+  }
+  .menu__card {
+    max-width: 1104px;
+    margin-inline: auto;
+    overflow: hidden;
+    color: var(--ink);
+    background: var(--surface);
+    transform-origin: 50% 0;
+    transform: translateY(calc((1 - var(--p)) * 120px)) rotate(calc((1 - var(--p)) * -3deg)) scale(calc(0.92 + var(--p) * 0.08));
+    will-change: transform;
+  }
+  .menu__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: clamp(28px, 4vw, 48px);
+    background: var(--surface-sunken);
+    border-bottom: 1px solid var(--line);
+  }
+  .menu__head h2 {
+    margin: 0;
+  }
+  .menu__badges {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+    font-size: 15px;
+    color: var(--ink-muted);
+  }
+  .menu__badges li {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .menu__fig {
+    font: 700 24px/1 var(--font-display);
+    color: var(--brand-text);
+    min-width: 2.2em;
+  }
+  .menu__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 clamp(28px, 4vw, 64px);
+    padding: clamp(28px, 4vw, 48px);
+  }
+  .menu__note {
+    grid-column: 1 / -1;
+    margin: 0 0 var(--space-8);
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--ink-muted);
+    max-width: 70ch;
+  }
+  .menu__note-star {
+    font-size: 16px;
+    line-height: 1;
+  }
+  .menu__cat {
+    margin-bottom: clamp(36px, 4vw, 56px);
+  }
+  .menu__cat-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .menu__cat-h {
+    font-size: clamp(2rem, 3vw, 2.6rem);
+    color: var(--accent);
+    margin: 0;
+  }
+  .menu__cat-note {
+    margin: 0 0 10px;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--ink-muted);
+    max-width: 44ch;
+  }
+  .menu__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .menu__row {
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+  }
+  .menu__names {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: transform 0.3s var(--ease-out);
+  }
+  .menu__name {
+    font: 600 17px/24px var(--font-sans);
+  }
+  .menu__desc {
+    font: 400 14px/20px var(--font-sans);
+    color: var(--ink-muted);
+  }
+  .menu__add {
+    align-self: center;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    background: var(--brand);
+    color: var(--on-brand);
+    font-weight: 600;
+    line-height: 1;
+    opacity: 0;
+    scale: 0.6;
+    transition:
+      opacity 0.2s,
+      scale 0.3s var(--spring);
+  }
+  .menu__row:hover .menu__names,
+  .menu__row:focus-visible .menu__names {
+    transform: translateX(6px);
+  }
+  .menu__row:hover .menu__add,
+  .menu__row:focus-visible .menu__add {
+    opacity: 1;
+    scale: 1;
+  }
+  .menu__promo {
+    background: var(--brand);
+    color: var(--on-brand);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: clamp(36px, 4vw, 56px);
+  }
+  .menu__promo p {
+    margin: 0;
+  }
+  .menu__promo-h {
+    font-size: clamp(2rem, 3vw, 2.6rem);
+    margin-bottom: 8px !important;
+    max-width: 12ch;
+  }
+  .menu__more {
+    grid-column: 1 / -1;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+  @media (hover: none) {
+    .menu__add {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+  @media (max-width: 760px) {
+    .menu__body {
+      grid-template-columns: 1fr;
+    }
+    .menu__head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    /* the single-column card is very tall; any tilt swings its lower rows off-screen */
+    .menu__card {
+      transform: translateY(calc((1 - var(--p)) * 70px)) scale(calc(0.95 + var(--p) * 0.05));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu {
+      --p: 1 !important;
+    }
+  }
+</style>

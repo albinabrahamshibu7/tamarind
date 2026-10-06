@@ -1,0 +1,80 @@
+---
+import '../styles/global.css';
+import { business, allItems } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+
+const pageData = JSON.stringify({
+  items: allItems,
+  biz: {
+    whatsapp: business.whatsapp,
+    openMinutes: business.openMinutes,
+    closeMinutes: business.closeMinutes,
+    closeMinutesWed: business.closeMinutesWed,
+    smokerMinutes: business.smokerMinutes,
+  },
+});
+
+// Restaurant data: verified facts only. No price or Offer fields while 2025 prices are unconfirmed.
+const ld = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  name: business.name,
+  alternateName: 'Tamarind Cafe',
+  telephone: `+91${business.phoneRaw}`,
+  servesCuisine: ['Barbecue', 'Texas BBQ', 'Arabic', 'Chinese'],
+  foundingDate: '2018',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Market Road, Anthinad',
+    addressLocality: 'Kollappally, Pala',
+    addressRegion: 'Kerala',
+    postalCode: '686651',
+    addressCountry: 'IN',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: 9.7647296, longitude: 76.7011032 },
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], opens: '12:30', closes: '23:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Wednesday', opens: '12:30', closes: '22:00' },
+  ],
+  hasMap: business.placeUrl,
+  sameAs: [business.instagramUrl],
+});
+---
+
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#14110F" />
+    <link rel="icon" type="image/svg+xml" href="/logo/tamarind-icon-ember-lit.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/photos/og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anek+Malayalam&family=Archivo:wght@400;600&family=Big+Shoulders+Display:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+    <script type="application/ld+json" set:html={ld} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+    <script id="ct-data" type="application/json" set:html={pageData} />
+  </body>
+</html>

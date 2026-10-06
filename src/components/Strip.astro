@@ -1,0 +1,42 @@
+---
+import { stripPills } from '../data/site';
+---
+
+<div class="strip marquee" aria-hidden="true" style="--dur:44s">
+  {
+    [0, 1].map(() => (
+      <div class="marquee__track pausable">
+        {[...stripPills, ...stripPills].map((t) => (
+          <span class="strip__item label">
+            {t}
+            <span class="strip__cut" />
+          </span>
+        ))}
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .strip {
+    position: relative;
+    z-index: 3;
+    background: var(--ember-500);
+    color: var(--char-950);
+    padding-block: 11px;
+  }
+  .strip__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 22px;
+    padding-right: 22px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  /* a square cut between phrases, where the reference used an emoji */
+  .strip__cut {
+    width: 7px;
+    height: 7px;
+    background: var(--char-950);
+  }
+</style>
