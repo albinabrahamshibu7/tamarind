@@ -34,7 +34,7 @@ import { reasons, allDayPicks } from '../data/site';
                   <img src={d.image} alt={d.alt} width="560" height="560" loading="lazy" decoding="async" />
                 </span>
               </div>
-              <h3 class="h3">{d.name}</h3>
+              <h3 class="h3">{d.name.split(' ').map((w, i) => [i > 0 && ' ', w.includes('-') ? <span class="nowrap">{w}</span> : w])}</h3>
               <Tag when={d.when} />
               <button type="button" class="why__add" data-add={d.id} aria-label={`Add ${d.name} to your order`}>
                 <Price value={d.price} dated={d.dated} />
@@ -75,6 +75,7 @@ import { reasons, allDayPicks } from '../data/site';
     display: grid;
     gap: 6px;
     justify-items: start;
+    align-content: start;
     padding-top: 16px;
     border-top: 1px solid var(--line-strong);
   }
@@ -125,7 +126,18 @@ import { reasons, allDayPicks } from '../data/site';
   }
   .why__dish h3 {
     margin: 26px 0 0;
-    max-width: 12ch;
+    max-width: 14ch;
+  }
+  /* plate, name, tag and price share rows across the two picks */
+  @supports (grid-template-rows: subgrid) {
+    .why__dish {
+      display: grid;
+      grid-template-rows: subgrid;
+      grid-row: span 4;
+      row-gap: 10px;
+      justify-items: center;
+      align-items: start;
+    }
   }
   .why__add {
     cursor: pointer;

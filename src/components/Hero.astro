@@ -227,7 +227,8 @@ const rows = lines.map(([l, r]) => ({ l: split(l), r: split(r) }));
   }
   .hero__chip--b {
     left: -12%;
-    bottom: 20%;
+    /* below the second headline line, so it never sits on a letter */
+    bottom: 8%;
     rotate: -4deg;
   }
   .hero__name {
@@ -367,6 +368,8 @@ const rows = lines.map(([l, r]) => ({ l: split(l), r: split(r) }));
     }
     .hero__chip--b {
       left: -14%;
+      /* no headline beside the plate here; sit clear of the dish name instead */
+      bottom: 22%;
     }
     /* arrows flank the dish name, so the buttons below stay in the first screen */
     .hero__arrow {

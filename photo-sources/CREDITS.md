@@ -25,23 +25,25 @@ Listing: https://www.google.com/maps/place/Tamarind+Cafe/@9.7647296,76.7011032,1
 | V31 | May 2023 | Pergola in daylight | `g-pergola-day` |
 | V18 | Feb 2021 | Indoor room by the grid windows | `g-room-windows` |
 
-Downloaded but not used: F12, F16, F36, F38, F48, F50, V23, V34. `tray-burger`, `tray-alfaham` and `tray-momos` are exported but no longer placed.
+Downloaded but not used: F12, F16, F36, F38, F48, F50, V23, V34. The `tray-*` crops are exported but no longer placed: every dish spot now takes a round plate (below).
 
-## Hero plates (placeholders)
+## Round plates (placeholders)
 
-The five round plate cutouts in `public/hero/` are **the High Dive project's plates**, copied over on 6 Oct 2026 to keep the spinning-plate hero while Cafe Tamarind's own dishes are pending. They are not Cafe Tamarind's food.
+The five round plate cutouts in `public/hero/` are **the High Dive project's plates**, copied over on 6 Oct 2026 to keep the round plates in the hero, "Off the smoker" and "Here at lunch?" while Cafe Tamarind's own dishes are pending. They are not Cafe Tamarind's food.
 
 | File | Shown as | Where |
 |---|---|---|
-| `alfaham-biriyani` | Al-faham with Arabic rice | hero slide 1 |
+| `alfaham-biriyani` | Al-faham with Arabic rice | hero slide 1. Also stands in for Smoked Beef Brisket in "Off the smoker" |
 | `momos` | Chicken momos | hero slide 2, "Here at lunch?" |
 | `alfaham-plate` | Al-faham | hero slide 3, "Here at lunch?" |
-| `chicken-noodles` | Chicken noodles | hero slide 4 |
-| `dum-biriyani` | Rice combos | hero slide 5. Loosest match: Cafe Tamarind has no biriyani on any menu sheet |
+| `chicken-noodles` | Chicken noodles | hero slide 4. Also stands in for Smoked Beef Platter in "Off the smoker" |
+| `dum-biriyani` | Rice combos | hero slide 5. Loosest match: Cafe Tamarind has no biriyani on any menu sheet. Also stands in for Smoked Mixed Platter in "Off the smoker" |
 
-To swap one: add `<name>-1000.webp` and `<name>-560.webp` (transparent background, plate centred, top-down) to `public/hero/` and edit `heroSlides` in `src/data/site.ts`. Each slide also sets `accent`, the headline colour while it is up.
+To swap one: add `<name>-1000.webp` and `<name>-560.webp` (transparent background, plate centred, top-down) to `public/hero/` and edit `heroSlides`, `specials` or `allDayPicks` in `src/data/site.ts`. Each hero slide also sets `accent`, the headline colour while it is up.
 
-None of the five is a smoked dish, so the hero currently shows no brisket, ribs or platter.
+In "Off the smoker" the plates do not show the dish named under them, so their `alt` is left empty. Write a real `alt` when each real photo goes in.
+
+None of the five is a smoked dish, so the site currently shows no photo of brisket, ribs or a platter on a plate.
 
 Notes
 - `g-yard-tree` shows guests at a distance. Swap it if anyone objects.

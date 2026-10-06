@@ -1,5 +1,4 @@
 ---
-import SlabEdge from './SlabEdge.astro';
 import { about, business } from '../data/site';
 
 const layout = [
@@ -10,7 +9,6 @@ const layout = [
 ---
 
 <section id="about" class="about sec theme-paper">
-  <SlabEdge at="top" seed={4} />
   <div class="wrap about__grid">
     <div class="about__collage">
       {
@@ -30,7 +28,6 @@ const layout = [
     <div class="about__copy">
       <p class="label about__eyebrow" data-reveal="up">{business.descriptor}</p>
       <h2 class="display h2" data-reveal="up">Pala's<br />smokehouse</h2>
-      <p class="about__ml" lang="ml" data-reveal="up" style="--delay:.05s">{business.nameMl}</p>
       {about.paragraphs.map((p, i) => <p class="body-l" data-reveal="up" style={`--delay:${0.1 + i * 0.08}s`}>{p}</p>)}
       <a href="#difference" class="btn btn--inverse" data-reveal="up" style="--delay:.26s">How we smoke</a>
     </div>
@@ -39,11 +36,12 @@ const layout = [
 
 <style>
   .about {
-    padding-block: clamp(130px, 15vw, 230px) clamp(60px, 8vw, 120px);
+    padding-block: clamp(72px, 9vw, 130px) clamp(60px, 8vw, 120px);
   }
   .about__grid {
     display: grid;
-    grid-template-columns: 1.15fr 1fr;
+    grid-template-columns: minmax(0, 640px) minmax(0, 460px);
+    justify-content: center;
     gap: clamp(40px, 6vw, 120px);
     align-items: center;
   }
@@ -98,11 +96,6 @@ const layout = [
   }
   .about__copy h2 {
     margin: 0;
-  }
-  .about__ml {
-    margin: -6px 0 8px;
-    font-size: 20px;
-    color: var(--accent);
   }
   .about__copy p {
     margin: 0;

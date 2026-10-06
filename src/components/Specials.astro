@@ -1,5 +1,4 @@
 ---
-import SlabEdge from './SlabEdge.astro';
 import Price from './Price.astro';
 import Tag from './Tag.astro';
 import { specials } from '../data/site';
@@ -13,13 +12,13 @@ import { specials } from '../data/site';
         specials.map((s, i) => (
           <li data-reveal="pop" style={`--delay:${i * 0.12}s`}>
             <article class="specials__card dish-host">
-              <div class="dish" style="--d:clamp(200px,21vw,290px)">
+              <div class:list={['dish', { 'dish--plate': s.plate }]} style="--d:clamp(200px,21vw,290px)">
                 <span class="dish__tile" />
                 <span class="dish__img">
                   <img src={s.image} alt={s.alt} width="560" height="560" loading="lazy" decoding="async" />
                 </span>
               </div>
-              <h3 class="h3">{s.name}</h3>
+              <h3 class="h3">{s.name.split(' ').map((w, i) => [i > 0 && ' ', w.includes('-') ? <span class="nowrap">{w}</span> : w])}</h3>
               <p class="specials__meta">
                 <Tag when={s.when} />
                 {s.desc && <span class="label muted">{s.desc}</span>}
@@ -34,12 +33,11 @@ import { specials } from '../data/site';
       }
     </ul>
   </div>
-  <SlabEdge at="bottom" seed={9} />
 </section>
 
 <style>
   .specials {
-    padding-block: clamp(60px, 8vw, 110px) clamp(160px, 17vw, 250px);
+    padding-block: clamp(60px, 8vw, 110px) clamp(72px, 9vw, 130px);
   }
   .specials__h {
     text-align: center;
@@ -74,6 +72,19 @@ import { specials } from '../data/site';
     justify-content: center;
     align-items: center;
     gap: 8px 12px;
+  }
+  /* plate, name, tag and price share rows across the cards, so they line up however a name wraps */
+  @supports (grid-template-rows: subgrid) {
+    .specials__grid > li,
+    .specials__card {
+      display: grid;
+      grid-template-rows: subgrid;
+      grid-row: span 4;
+      row-gap: 12px;
+    }
+    .specials__card {
+      justify-items: center;
+    }
   }
   .specials__add::after {
     content: "";

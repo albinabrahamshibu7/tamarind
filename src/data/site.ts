@@ -11,7 +11,6 @@ export const PROTOTYPE = true;
 
 export const business = {
   name: 'Cafe Tamarind', // REAL - always in this order (design-system/README)
-  nameMl: 'കഫേ ടാമറിൻഡ്', // REAL - design system
   descriptor: 'Smokehouse · Pala · Since 2018', // REAL - drawn into the logo
   tagline: 'Sixteen hours. Sliced to order.', // REAL - design-system cover line
   phoneRaw: '9747638246', // REAL - Google, Instagram, Restaurant Guru
@@ -265,24 +264,29 @@ export const about = {
 };
 
 // ---------------------------------------------------------------------------
-// Off the smoker - three trays, current prices (Sep 2026 sheets).
+// Off the smoker - three smoked lines, current prices (Sep 2026 sheets).
+// PLACEHOLDER: the plates are the High Dive cutouts and do not show these dishes, so alt
+// stays empty (the name sits right under each plate). Give each a real alt with its photo.
 // ---------------------------------------------------------------------------
 const one = (c: CardItem, extra: { image: string; alt: string; when: When; plate?: boolean }) => ({ plate: false, ...c, ...extra });
 
 export const specials = [
   one(pick('brisket', 'Smoked Beef Brisket'), {
-    image: '/photos/tray-brisket-560.webp',
-    alt: 'Sliced smoked brisket with sides on a steel tray',
+    image: '/hero/alfaham-biriyani-560.webp',
+    alt: '',
+    plate: true,
     when: 'weekend',
   }),
   one(pick('platters', 'Smoked Mixed Platter'), {
-    image: '/photos/tray-mixed-platter-560.webp',
-    alt: 'Pork ribs, smoked chicken and burgers on a tray',
+    image: '/hero/dum-biriyani-560.webp',
+    alt: '',
+    plate: true,
     when: 'evening',
   }),
   one(pick('platters', 'Smoked Beef Platter'), {
-    image: '/photos/tray-beef-platter-560.webp',
-    alt: 'Brisket, pulled beef, tenderloin, toasted bread and fries on a tray',
+    image: '/hero/chicken-noodles-560.webp',
+    alt: '',
+    plate: true,
     when: 'evening',
   }),
 ];

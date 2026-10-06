@@ -1,6 +1,4 @@
 ---
-import SlabEdge from './SlabEdge.astro';
-import Slices from './Slices.astro';
 import { beats } from '../data/site';
 ---
 
@@ -16,7 +14,6 @@ import { beats } from '../data/site';
         {
           beats.slice(0, 2).map((b, i) => (
             <li class="diff__beat" data-reveal="left" style={`--delay:${i * 0.12}s`}>
-              <Slices />
               <h3 class="h3">{b.title}</h3>
               <p>{b.body}</p>
             </li>
@@ -34,7 +31,6 @@ import { beats } from '../data/site';
         {
           beats.slice(2).map((b, i) => (
             <li class="diff__beat" data-reveal="right" style={`--delay:${i * 0.12}s`}>
-              <Slices />
               <h3 class="h3">{b.title}</h3>
               <p>{b.body}</p>
             </li>
@@ -47,20 +43,11 @@ import { beats } from '../data/site';
       <a class="btn" href="#reviews">Read the reviews</a>
     </div>
   </div>
-  <SlabEdge at="bottom" seed={21} />
 </section>
 
 <style>
   .diff {
-    padding-block: clamp(40px, 6vw, 80px) clamp(170px, 17vw, 270px);
-  }
-  /* this edge belongs to the paper section below, so its slabs are paper */
-  .diff :global(.slab-edge rect) {
-    fill: var(--paper-50) !important;
-  }
-  .diff :global(.slab-edge line) {
-    stroke: var(--char-900);
-    opacity: 0.25;
+    padding-block: clamp(40px, 6vw, 80px) clamp(72px, 9vw, 130px);
   }
   .diff__head {
     text-align: center;
@@ -98,7 +85,7 @@ import { beats } from '../data/site';
     gap: 10px;
   }
   .diff__beat h3 {
-    margin: 6px 0 0;
+    margin: 0;
   }
   .diff__beat p {
     margin: 0;

@@ -192,15 +192,14 @@ const right = menuCard.filter((_, i) => i % 2 === 1);
     place-items: center;
     width: 24px;
     height: 24px;
-    background: var(--brand);
-    color: var(--on-brand);
+    border: 1px solid var(--line-strong);
+    color: var(--brand-text);
     font-weight: 600;
     line-height: 1;
-    opacity: 0;
-    scale: 0.6;
     transition:
-      opacity 0.2s,
-      scale 0.3s var(--spring);
+      background-color 0.2s,
+      border-color 0.2s,
+      color 0.2s;
   }
   .menu__row:hover .menu__names,
   .menu__row:focus-visible .menu__names {
@@ -208,8 +207,9 @@ const right = menuCard.filter((_, i) => i % 2 === 1);
   }
   .menu__row:hover .menu__add,
   .menu__row:focus-visible .menu__add {
-    opacity: 1;
-    scale: 1;
+    background: var(--brand);
+    border-color: var(--brand);
+    color: var(--on-brand);
   }
   .menu__promo {
     background: var(--brand);
@@ -234,12 +234,6 @@ const right = menuCard.filter((_, i) => i % 2 === 1);
     margin: 0;
     display: flex;
     justify-content: center;
-  }
-  @media (hover: none) {
-    .menu__add {
-      opacity: 1;
-      scale: 1;
-    }
   }
   @media (max-width: 760px) {
     .menu__body {

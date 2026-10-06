@@ -34,7 +34,6 @@
 
   --font-display: "Big Shoulders Display", "Arial Narrow", sans-serif;
   --font-sans: "Archivo", system-ui, sans-serif;
-  --font-ml: "Anek Malayalam", "Noto Sans Malayalam", sans-serif;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -150,9 +149,10 @@ img {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
-[lang="ml"] {
-  font-family: var(--font-ml);
-  line-height: 1.6;
+
+/* keeps a hyphenated name (Al-Faham) on one line */
+.nowrap {
+  white-space: nowrap;
 }
 
 .skip-link {
@@ -405,14 +405,6 @@ img {
 .dish--plate .dish__img img {
   position: relative;
   object-fit: contain;
-}
-
-/* ---------- slices: the brand's one literal motif (hairline rules, brisket slices) ---------- */
-.slices {
-  display: block;
-  width: 56px;
-  height: 28px;
-  color: var(--brand-text);
 }
 
 /* ---------- marquees ---------- */

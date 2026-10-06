@@ -1,6 +1,4 @@
 ---
-import SlabEdge from './SlabEdge.astro';
-import Slices from './Slices.astro';
 import { gallery } from '../data/site';
 
 const rot = [-4, 3, -2, 4, -3, 2, -3, 4];
@@ -26,7 +24,6 @@ const after = gallery.slice(mid);
         ))
       }
       <li class="gal__promo" data-gal-center style="--r:0deg;--y:-20px">
-        <Slices class="gal__promo-mark" />
         <p class="display gal__promo-h">Bring the<br />whole table</p>
         <p class="gal__promo-q">Platters serve 2 to 5. Every one comes with the full set of sides.</p>
         <a class="btn btn--inverse" href="#menu">See the menu</a>
@@ -40,13 +37,12 @@ const after = gallery.slice(mid);
       }
     </ul>
   </div>
-  <SlabEdge at="bottom" seed={33} />
 </section>
 
 <style>
   .gal {
     --p: 0;
-    padding-block: clamp(60px, 8vw, 120px) clamp(180px, 17vw, 270px);
+    padding-block: clamp(60px, 8vw, 120px) clamp(72px, 9vw, 130px);
     overflow: hidden;
   }
   .gal__head {
@@ -119,10 +115,6 @@ const after = gallery.slice(mid);
   }
   .gal__promo p {
     margin: 0;
-  }
-  .gal__promo :global(.gal__promo-mark) {
-    color: var(--on-brand);
-    margin-bottom: auto;
   }
   .gal__promo-h {
     font-size: clamp(2rem, 3vw, 2.75rem);
