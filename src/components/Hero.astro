@@ -1,5 +1,4 @@
 ---
-import Tag from './Tag.astro';
 import { heroSlides, heroSub, business, telLink } from '../data/site';
 
 // The line splits around the plate: left words, the plate, right words.
@@ -55,10 +54,7 @@ const rows = lines.map(([l, r]) => ({ l: split(l), r: split(r) }));
                 decoding="async"
               />
             </div>
-            <span class="hero__when" style="--k:0"><Tag when={s.when} /></span>
-            <span class="hero__chip hero__chip--a label" style="--k:1" aria-hidden="true">{s.chips[0]}</span>
-            <span class="hero__chip hero__chip--b label" style="--k:2" aria-hidden="true">{s.chips[1]}</span>
-            <figcaption class="hero__name" style="--k:3">{s.name}</figcaption>
+            <figcaption class="hero__name" style="--k:0">{s.name}</figcaption>
           </figure>
         ))
       }
@@ -177,7 +173,7 @@ const rows = lines.map(([l, r]) => ({ l: split(l), r: split(r) }));
   .hero__plate::before {
     content: "";
     position: absolute;
-    inset: 3%;
+    inset: 5%;
     border-radius: 50%;
     box-shadow:
       0 34px 48px rgba(0, 0, 0, 0.55),
@@ -196,8 +192,6 @@ const rows = lines.map(([l, r]) => ({ l: split(l), r: split(r) }));
     }
   }
 
-  .hero__when,
-  .hero__chip,
   .hero__name {
     position: absolute;
     opacity: 0;
@@ -205,31 +199,6 @@ const rows = lines.map(([l, r]) => ({ l: split(l), r: split(r) }));
     transition:
       opacity 0.35s,
       scale 0.55s var(--spring);
-  }
-  .hero__when {
-    left: -6%;
-    top: 2%;
-    padding: 6px 8px;
-    background: var(--char-950);
-    rotate: -8deg;
-  }
-  .hero__chip {
-    padding: 7px 10px;
-    background: var(--char-950);
-    border: 1px solid var(--hero-accent);
-    color: var(--ink);
-    white-space: nowrap;
-  }
-  .hero__chip--a {
-    right: -10%;
-    top: 14%;
-    rotate: 6deg;
-  }
-  .hero__chip--b {
-    left: -12%;
-    /* below the second headline line, so it never sits on a letter */
-    bottom: 8%;
-    rotate: -4deg;
   }
   .hero__name {
     left: 50%;
@@ -243,16 +212,12 @@ const rows = lines.map(([l, r]) => ({ l: split(l), r: split(r) }));
     text-transform: uppercase;
     white-space: nowrap;
   }
-  .hero__slide.is-active .hero__when,
-  .hero__slide.is-active .hero__chip,
   .hero__slide.is-active .hero__name {
     opacity: 1;
     scale: 1;
     transition-delay: calc(0.55s + var(--k) * 0.09s);
   }
   /* first paint: labels wait for the intro */
-  :global(html:not(.hero-ready)) .hero__slide.is-active .hero__when,
-  :global(html:not(.hero-ready)) .hero__slide.is-active .hero__chip,
   :global(html:not(.hero-ready)) .hero__slide.is-active .hero__name {
     transition-delay: calc(1.5s + var(--k) * 0.1s);
   }
@@ -359,17 +324,6 @@ const rows = lines.map(([l, r]) => ({ l: split(l), r: split(r) }));
       top: auto;
       translate: none;
       margin: 6vw auto 0;
-    }
-    .hero__when {
-      left: -12%;
-    }
-    .hero__chip--a {
-      right: -14%;
-    }
-    .hero__chip--b {
-      left: -14%;
-      /* no headline beside the plate here; sit clear of the dish name instead */
-      bottom: 22%;
     }
     /* arrows flank the dish name, so the buttons below stay in the first screen */
     .hero__arrow {

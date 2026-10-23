@@ -16,22 +16,44 @@ const itemById = new Map(data.items.map((i) => [i.id, i]));
 /* ---------------------------------------------------------------- reveal */
 function initReveal() {
   const els = $$('[data-reveal]');
+  const lists = $$('[data-stagger]');
+  // each child waits a beat longer than the one before; capped so long lists don't drag
+  lists.forEach((l) => [...l.children].forEach((c, i) => (c as HTMLElement).style.setProperty('--i', String(Math.min(i, 12)))));
   if (!('IntersectionObserver' in window) || reduced) {
-    els.forEach((el) => el.classList.add('is-in'));
+    [...els, ...lists].forEach((el) => el.classList.add('is-in'));
     return;
   }
+  // a wiped heading is clipped to nothing, so the observer would never see it: watch its parent
+  const watched = new Map<Element, Element>();
   const io = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
         if (e.isIntersecting) {
-          e.target.classList.add('is-in');
+          (watched.get(e.target) ?? e.target).classList.add('is-in');
           io.unobserve(e.target);
         }
       }
     },
     { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
   );
-  els.forEach((el) => io.observe(el));
+  els.forEach((el) => {
+    const t = el.dataset.reveal === 'wipe' && el.parentElement ? el.parentElement : el;
+    watched.set(t, el);
+    io.observe(t);
+  });
+  // lists can be taller than the screen, so start them as soon as their top shows
+  const lio = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-in');
+          lio.unobserve(e.target);
+        }
+      }
+    },
+    { rootMargin: '0px 0px -10% 0px' },
+  );
+  lists.forEach((el) => lio.observe(el));
 }
 
 /* ---------------------------------------------------------------- scroll-linked progress + floating nav
@@ -471,6 +493,9 @@ function initOrder() {
     const it = itemById.get(id);
     if (!it) return;
     change(id, 1);
+    btn.classList.remove('is-added');
+    void btn.offsetWidth;
+    btn.classList.add('is-added');
     pill.classList.remove('bump');
     void pill.offsetWidth;
     pill.classList.add('bump');

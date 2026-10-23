@@ -41,12 +41,12 @@ import { business, telLink, isDated, itemId } from '../data/site';
       {
         fullMenu.map((section) => (
           <section class="fm__section" id={section.id} aria-labelledby={`${section.id}-h`}>
-            <h2 class="display fm__section-h" id={`${section.id}-h`}>
+            <h2 class="display fm__section-h" id={`${section.id}-h`} data-reveal="wipe">
               {section.title}
             </h2>
             <div class="fm__groups">
               {section.groups.map((g) => (
-                <div class="fm__group">
+                <div class="fm__group" data-reveal="up">
                   <div class="fm__group-head">
                     <h3 class="h3">{g.title}</h3>
                     <span class="fm__group-meta">
@@ -55,7 +55,7 @@ import { business, telLink, isDated, itemId } from '../data/site';
                     </span>
                   </div>
                   {g.comesWith && <p class="fm__with">With {g.comesWith.charAt(0).toLowerCase() + g.comesWith.slice(1)}.</p>}
-                  <ul class="fm__list" role="list">
+                  <ul class="fm__list" role="list" data-stagger>
                     {g.items.map((it, i) => (
                       <li>
                         <button class="fm__row" type="button" data-add={itemId(g, i)}>
@@ -151,7 +151,11 @@ import { business, telLink, isDated, itemId } from '../data/site';
     font-size: 12px;
     transition:
       background-color 0.2s,
-      color 0.2s;
+      color 0.2s,
+      translate 0.35s var(--spring);
+  }
+  .fm__jump a:hover {
+    translate: 0 -3px;
   }
   .fm__jump a:hover {
     background: var(--surface-inverse);
@@ -244,7 +248,8 @@ import { business, telLink, isDated, itemId } from '../data/site';
     transition:
       background-color 0.2s,
       border-color 0.2s,
-      color 0.2s;
+      color 0.2s,
+      transform 0.45s var(--spring);
   }
   .fm__row:hover .fm__names,
   .fm__row:focus-visible .fm__names {
@@ -252,6 +257,7 @@ import { business, telLink, isDated, itemId } from '../data/site';
   }
   .fm__row:hover .fm__add,
   .fm__row:focus-visible .fm__add {
+    transform: rotate(90deg);
     background: var(--brand);
     border-color: var(--brand);
     color: var(--on-brand);
