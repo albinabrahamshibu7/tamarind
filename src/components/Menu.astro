@@ -30,11 +30,11 @@ const right = menuCard.filter((_, i) => i % 2 === 1);
               {col.map((cat) => (
                 <div class="menu__cat" id={`cat-${cat.id}`}>
                   <div class="menu__cat-head">
-                    <h3 class="display menu__cat-h" data-reveal="wipe">{cat.title}</h3>
+                    <h3 class="display menu__cat-h">{cat.title}</h3>
                     <Tag when={cat.when} />
                   </div>
                   {cat.note && <p class="menu__cat-note">{cat.note}</p>}
-                  <ul class="menu__list" role="list" data-stagger>
+                  <ul class="menu__list" role="list">
                     {cat.items.map((it) => (
                       <li>
                         <button class="menu__row" type="button" data-add={it.id}>
@@ -51,7 +51,7 @@ const right = menuCard.filter((_, i) => i % 2 === 1);
                 </div>
               ))}
               {ci === 1 && (
-                <aside class="menu__promo" aria-label="Reserve brisket" data-reveal="pop">
+                <aside class="menu__promo" aria-label="Reserve brisket">
                   <p class="label">Sat & Sun · from 6 PM</p>
                   <p class="display menu__promo-h">The brisket runs out. Call ahead.</p>
                   <a class="btn btn--inverse" href={telLink}>Call {business.phoneDisplay}</a>
