@@ -7,6 +7,8 @@ import Specials from '../components/Specials.astro';
 import Loud from '../components/Loud.astro';
 import Menu from '../components/Menu.astro';
 import Ticker from '../components/Ticker.astro';
+import Torn from '../components/Torn.astro';
+import { tickerRowsAlt } from '../data/site';
 import Difference from '../components/Difference.astro';
 import Reviews from '../components/Reviews.astro';
 import Gallery from '../components/Gallery.astro';
@@ -27,18 +29,24 @@ import Floating from '../components/Floating.astro';
   </div>
   <main id="main">
     <Hero />
+    <Ticker rows={tickerRowsAlt} />
+    <Torn from="pit" to="paper" />
     <About />
     <Specials />
+    <Torn from="paper" to="pit" flip />
     <Loud />
     <Menu />
     <Ticker />
     <Difference />
+    <Torn from="pit" to="paper" flip />
     <Reviews />
     <Gallery />
+    <Torn from="paper" to="pit" />
     <WhyUs />
     <Strip />
     <OrderBold />
     <Connect />
+    <Torn from="paper" to="pit" flip />
   </main>
   <Footer />
   <Floating />

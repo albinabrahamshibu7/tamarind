@@ -1,10 +1,15 @@
 ---
 import { tickerRows } from '../data/site';
+
+interface Props {
+  rows?: string[][];
+}
+const { rows = tickerRows } = Astro.props;
 ---
 
-<section class="ticker sec theme-pit grain" aria-label={`From our kitchens: ${tickerRows.flat().join(', ')}`}>
+<section class="ticker sec theme-pit grain" aria-label={`From our kitchens: ${rows.flat().join(', ')}`}>
   {
-    tickerRows.map((row, r) => (
+    rows.map((row, r) => (
       <div class:list={['marquee', 'ticker__row', { 'marquee--rev': r % 2 === 1 }]} style={`--dur:${38 + r * 7}s`} aria-hidden="true">
         {[0, 1].map(() => (
           <div class="marquee__track">
@@ -47,5 +52,19 @@ import { tickerRows } from '../data/site';
     height: 0.16em;
     background: currentColor;
     opacity: 0.55;
+  }
+  /* phones: the three rows fill three quarters of the screen */
+  @media (max-width: 700px) {
+    .ticker {
+      min-height: 75vh;
+      min-height: 75svh;
+      padding-block: 0;
+      align-content: center;
+    }
+    .ticker__item {
+      font-size: 23vh;
+      font-size: 23svh;
+      line-height: 1.04;
+    }
   }
 </style>

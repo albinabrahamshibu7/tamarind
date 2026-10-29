@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 import Floating from '../components/Floating.astro';
 import Price from '../components/Price.astro';
 import Tag from '../components/Tag.astro';
+import Torn from '../components/Torn.astro';
 import { fullMenu, fullMenuCount } from '../data/fullMenu';
 import { business, telLink, isDated, itemId } from '../data/site';
 ---
@@ -16,6 +17,7 @@ import { business, telLink, isDated, itemId } from '../data/site';
   <div class="sec theme-pit grain" style="z-index:30">
     <Header />
   </div>
+  <Torn from="pit" to="paper" />
 
   <main id="main" class="fm sec theme-paper">
     <div class="wrap fm__inner">
@@ -46,7 +48,7 @@ import { business, telLink, isDated, itemId } from '../data/site';
             </h2>
             <div class="fm__groups">
               {section.groups.map((g) => (
-                <div class="fm__group" data-reveal="up">
+                <div class="fm__group">
                   <div class="fm__group-head">
                     <h3 class="h3">{g.title}</h3>
                     <span class="fm__group-meta">
@@ -55,20 +57,34 @@ import { business, telLink, isDated, itemId } from '../data/site';
                     </span>
                   </div>
                   {g.comesWith && <p class="fm__with">With {g.comesWith.charAt(0).toLowerCase() + g.comesWith.slice(1)}.</p>}
-                  <ul class="fm__list" role="list" data-stagger>
+                  <ul class="fm__grid" role="list" data-stagger>
                     {g.items.map((it, i) => (
-                      <li>
-                        <button class="fm__row" type="button" data-add={itemId(g, i)}>
-                          <span class="fm__names">
-                            <span class="fm__name">{it.name}</span>
-                            {(it.note || it.serves || it.veg != null) && (
-                              <span class="fm__desc">
-                                {[it.serves && `Serves ${it.serves}`, it.note, it.veg != null && `Veg ₹${it.veg}`].filter(Boolean).join('. ')}
+                      <li class="fm__item">
+                        <button class="fm__card" type="button" data-add={itemId(g, i)}>
+                          <span class="fm__photo">
+                            {it.image ? (
+                              <img src={it.image} alt="" width="800" height="600" loading="lazy" decoding="async" />
+                            ) : (
+                              <span class="fm__ph" aria-hidden="true">
+                                <svg viewBox="0 0 48 48" width="40" height="40">
+                                  <circle cx="24" cy="24" r="17" fill="none" stroke="currentColor" stroke-width="2" />
+                                  <circle cx="24" cy="24" r="10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" />
+                                </svg>
+                                <span class="label">Photo soon</span>
                               </span>
                             )}
+                            {it.serves && <span class="fm__serves label">Serves {it.serves}</span>}
                           </span>
-                          <Price value={it.price} dated={isDated(g)} />
-                          <span class="fm__add" aria-hidden="true">+</span>
+                          <span class="fm__body">
+                            <span class="fm__name">{it.name}</span>
+                            {(it.note || it.veg != null) && (
+                              <span class="fm__desc">{[it.note, it.veg != null && `Veg ₹${it.veg}`].filter(Boolean).join('. ')}</span>
+                            )}
+                            <span class="fm__foot">
+                              <Price value={it.price} dated={isDated(g)} />
+                              <span class="fm__add" aria-hidden="true">+</span>
+                            </span>
+                          </span>
                         </button>
                       </li>
                     ))}
@@ -86,6 +102,7 @@ import { business, telLink, isDated, itemId } from '../data/site';
       </aside>
     </div>
   </main>
+  <Torn from="paper" to="pit" flip />
 
   <Footer />
   <Floating />
@@ -174,12 +191,7 @@ import { business, telLink, isDated, itemId } from '../data/site';
     color: var(--accent);
     border-bottom: 2px solid var(--ink);
   }
-  .fm__groups {
-    columns: 2;
-    column-gap: clamp(28px, 4vw, 64px);
-  }
   .fm__group {
-    break-inside: avoid;
     margin-bottom: var(--space-12);
   }
   .fm__group-head {
@@ -205,38 +217,98 @@ import { business, telLink, isDated, itemId } from '../data/site';
     line-height: 20px;
     color: var(--ink-muted);
   }
-  .fm__list {
+  .fm__grid {
     list-style: none;
-    margin: 0;
+    margin: 14px 0 0;
     padding: 0;
-    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: clamp(12px, 1.6vw, 20px);
   }
-  .fm__row {
+  .fm__item {
+    display: flex;
+  }
+  .fm__card {
     width: 100%;
     display: flex;
-    align-items: baseline;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--line);
+    flex-direction: column;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
     text-align: left;
     cursor: pointer;
+    transition:
+      transform 0.3s var(--ease-out),
+      border-color 0.25s,
+      box-shadow 0.3s;
   }
-  .fm__names {
+  .fm__card:hover,
+  .fm__card:focus-visible {
+    transform: translateY(-4px);
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-lift);
+  }
+  .fm__photo {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--surface-sunken);
+  }
+  .fm__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out);
+  }
+  .fm__card:hover .fm__photo img {
+    transform: scale(1.05);
+  }
+  /* empty frame until the dish is photographed */
+  .fm__ph {
+    position: absolute;
+    inset: 10px;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 8px;
+    border: 1px dashed var(--line-strong);
+    color: var(--line-strong);
+  }
+  .fm__ph .label {
+    font-size: 11px;
+  }
+  .fm__serves {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    padding: 5px 8px;
+    background: var(--surface-inverse);
+    color: var(--ink-inverse);
+    font-size: 11px;
+  }
+  .fm__body {
     flex: 1;
-    min-width: 0;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s var(--ease-out);
+    gap: 6px;
+    padding: 14px 16px 16px;
   }
   .fm__name {
-    font: 600 17px/24px var(--font-sans);
+    font: 600 17px/23px var(--font-sans);
   }
   .fm__desc {
     font: 400 14px/20px var(--font-sans);
     color: var(--ink-muted);
   }
+  .fm__foot {
+    margin-top: auto;
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
   .fm__add {
-    align-self: center;
     display: grid;
     place-items: center;
     width: 24px;
@@ -251,12 +323,8 @@ import { business, telLink, isDated, itemId } from '../data/site';
       color 0.2s,
       transform 0.45s var(--spring);
   }
-  .fm__row:hover .fm__names,
-  .fm__row:focus-visible .fm__names {
-    transform: translateX(6px);
-  }
-  .fm__row:hover .fm__add,
-  .fm__row:focus-visible .fm__add {
+  .fm__card:hover .fm__add,
+  .fm__card:focus-visible .fm__add {
     transform: rotate(90deg);
     background: var(--brand);
     border-color: var(--brand);
@@ -277,9 +345,41 @@ import { business, telLink, isDated, itemId } from '../data/site';
     margin: 0;
     font-size: clamp(2rem, 4vw, 3.25rem);
   }
-  @media (max-width: 820px) {
-    .fm__groups {
-      columns: 1;
+  /* phones: two cards a row so the photos still read */
+  @media (max-width: 560px) {
+    .fm__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .fm__body {
+      padding: 10px 10px 12px;
+      gap: 4px;
+    }
+    .fm__name {
+      font-size: 15px;
+      line-height: 20px;
+    }
+    .fm__desc {
+      font-size: 13px;
+      line-height: 18px;
+    }
+    .fm__foot .price {
+      font-size: 20px;
+      line-height: 24px;
+    }
+    .fm__ph svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fm__card,
+    .fm__photo img {
+      transition: none;
+    }
+    .fm__card:hover,
+    .fm__card:focus-visible {
+      transform: none;
     }
   }
 </style>

@@ -1,4 +1,9 @@
 ---
+// fonts are self-hosted: no visitor IP goes to Google's font servers
+import '@fontsource/archivo/400';
+import '@fontsource/archivo/600';
+import '@fontsource/big-shoulders-display/700';
+import '@fontsource/big-shoulders-display/800';
 import '../styles/global.css';
 import { business, allItems } from '../data/site';
 
@@ -8,7 +13,10 @@ interface Props {
 }
 const { title, description } = Astro.props;
 
-const pageData = JSON.stringify({
+// JSON dropped into <script> tags: escape "<" so no string can close the tag early
+const safeJson = (v: unknown) => JSON.stringify(v).replace(/</g, '\\u003c');
+
+const pageData = safeJson({
   items: allItems,
   biz: {
     whatsapp: business.whatsapp,
@@ -20,7 +28,7 @@ const pageData = JSON.stringify({
 });
 
 // Restaurant data: verified facts only. No price or Offer fields while 2025 prices are unconfirmed.
-const ld = JSON.stringify({
+const ld = safeJson({
   '@context': 'https://schema.org',
   '@type': 'Restaurant',
   name: business.name,
@@ -61,12 +69,6 @@ const ld = JSON.stringify({
     <meta property="og:description" content={description} />
     <meta property="og:image" content="/photos/og.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600&family=Big+Shoulders+Display:wght@700;800&display=swap"
-      rel="stylesheet"
-    />
     <script is:inline>
       document.documentElement.classList.add('js');
     </script>

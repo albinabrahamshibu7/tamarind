@@ -1,7 +1,9 @@
 // Complete menu, transcribed from /Menu.md (web-verified 2026-10-04).
 // `asOf` is the date of the newest photographed menu sheet for that group.
 export type When = 'now' | 'evening' | 'weekend';
-export type FullItem = { name: string; price: number | null; veg?: number | null; note?: string; serves?: string };
+// `image`: path under /public (e.g. '/menu/smoked-pork-ribs.webp'), 4:3 crop, ~800 px wide.
+// Leave it out and the card shows an empty photo frame.
+export type FullItem = { name: string; price: number | null; veg?: number | null; note?: string; serves?: string; image?: string };
 export type FullGroup = {
   id: string;
   title: string;
