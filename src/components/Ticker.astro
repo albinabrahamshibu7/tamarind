@@ -1,15 +1,10 @@
 ---
 import { tickerRows } from '../data/site';
-
-interface Props {
-  rows?: string[][];
-}
-const { rows = tickerRows } = Astro.props;
 ---
 
-<section class="ticker sec theme-pit grain" aria-label={`From our kitchens: ${rows.flat().join(', ')}`}>
+<section class="ticker sec theme-pit grain" aria-label={`From our kitchens: ${tickerRows.flat().join(', ')}`}>
   {
-    rows.map((row, r) => (
+    tickerRows.map((row, r) => (
       <div class:list={['marquee', 'ticker__row', { 'marquee--rev': r % 2 === 1 }]} style={`--dur:${38 + r * 7}s`} aria-hidden="true">
         {[0, 1].map(() => (
           <div class="marquee__track">

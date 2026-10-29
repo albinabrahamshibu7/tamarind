@@ -8,6 +8,28 @@ import Tag from '../components/Tag.astro';
 import Torn from '../components/Torn.astro';
 import { fullMenu, fullMenuCount } from '../data/fullMenu';
 import { business, telLink, isDated, itemId } from '../data/site';
+import type { FullGroup } from '../data/fullMenu';
+
+// Desktop shows four cards a row, and categories run on into each other so no row is left half empty.
+// Each category opens with a title tile; where a section would end on a short row, some title tiles
+// are widened to two columns (only where the row has room) until the last row closes at four.
+const COLS = 4;
+const layout = (groups: FullGroup[]) => {
+  const spans = groups.map(() => 1);
+  let extra = (COLS - (groups.reduce((n, g) => n + 1 + g.items.length, 0) % COLS)) % COLS;
+  let col = 0;
+  groups.forEach((g, gi) => {
+    if (extra > 0 && COLS - col >= 2) {
+      spans[gi] = 2;
+      extra--;
+    }
+    col = (col + spans[gi] + g.items.length) % COLS;
+  });
+  return spans;
+};
+const sections = fullMenu.map((s) => ({ ...s, spans: layout(s.groups) }));
+// short chip labels: "Smoked BBQ Chicken, half" -> "Smoked BBQ Chicken"
+const chip = (g: FullGroup) => g.title.split(',')[0];
 ---
 
 <Layout
@@ -40,26 +62,49 @@ import { business, telLink, isDated, itemId } from '../data/site';
         </nav>
       </header>
 
+      <!-- phones: every category as a button, pinned while you scroll -->
+      <nav class="fm__cats" aria-label="Menu categories" data-cats>
+        <div class="fm__cats-track">
+          {
+            fullMenu.map((s) => (
+              <>
+                <span class="fm__cats-sec label" aria-hidden="true">{s.title}</span>
+                {s.groups.map((g) => (
+                  <a class="fm__chip label" href={`#cat-${g.id}`} data-chip={`cat-${g.id}`}>
+                    {chip(g)}
+                  </a>
+                ))}
+              </>
+            ))
+          }
+        </div>
+      </nav>
+
       {
-        fullMenu.map((section) => (
+        sections.map((section) => (
           <section class="fm__section" id={section.id} aria-labelledby={`${section.id}-h`}>
             <h2 class="display fm__section-h" id={`${section.id}-h`} data-reveal="wipe">
               {section.title}
             </h2>
-            <div class="fm__groups">
-              {section.groups.map((g) => (
-                <div class="fm__group">
-                  <div class="fm__group-head">
-                    <h3 class="h3">{g.title}</h3>
-                    <span class="fm__group-meta">
-                      <Tag when={g.when} />
-                      {isDated(g) && <span class="label muted">{g.asOf} prices</span>}
-                    </span>
-                  </div>
+            <div class="fm__grid" data-stagger>
+              {section.groups.map((g, gi) => [
+                <div
+                  class:list={['fm__cat theme-pit', { 'fm__cat--wide': section.spans[gi] === 2 }]}
+                  id={`cat-${g.id}`}
+                  data-cat
+                >
+                  <h3 class="display fm__cat-h">{g.title}</h3>
+                  <span class="fm__cat-meta">
+                    <Tag when={g.when} />
+                    {isDated(g) && <span class="label muted">{g.asOf} prices</span>}
+                  </span>
                   {g.comesWith && <p class="fm__with">With {g.comesWith.charAt(0).toLowerCase() + g.comesWith.slice(1)}.</p>}
-                  <ul class="fm__grid" role="list" data-stagger>
-                    {g.items.map((it, i) => (
-                      <li class="fm__item">
+                  <span class="fm__count label">
+                    {g.items.length} {g.items.length === 1 ? 'dish' : 'dishes'}
+                  </span>
+                </div>,
+                ...g.items.map((it, i) => (
+                      <div class="fm__item">
                         <button class="fm__card" type="button" data-add={itemId(g, i)}>
                           <span class="fm__photo">
                             {it.image ? (
@@ -86,11 +131,9 @@ import { business, telLink, isDated, itemId } from '../data/site';
                             </span>
                           </span>
                         </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+                      </div>
+                )),
+              ])}
             </div>
           </section>
         ))
@@ -110,6 +153,42 @@ import { business, telLink, isDated, itemId } from '../data/site';
 
 <script>
   import '../scripts/main.ts';
+
+  // phones: light up the chip for the category on screen and keep it in view in the bar
+  const bar = document.querySelector<HTMLElement>('[data-cats]');
+  if (bar) {
+    const chips = new Map([...bar.querySelectorAll<HTMLElement>('[data-chip]')].map((c) => [c.dataset.chip!, c]));
+    const cats = [...document.querySelectorAll<HTMLElement>('[data-cat]')];
+    let current: HTMLElement | undefined;
+    let queued = false;
+    const update = () => {
+      queued = false;
+      if (bar.offsetParent === null) return; // bar hidden above phone width
+      // current = the last category whose title tile has passed just under the bar
+      const line = bar.getBoundingClientRect().bottom + 90;
+      let active: HTMLElement | undefined;
+      for (const el of cats) {
+        if (el.getBoundingClientRect().top > line) break;
+        active = el;
+      }
+      const c = active && chips.get(active.id);
+      if (c === current) return;
+      current?.removeAttribute('aria-current');
+      current = c;
+      if (!c) return;
+      c.setAttribute('aria-current', 'true');
+      // scroll the bar only, never the page
+      bar.scrollTo({ left: c.offsetLeft - 16, behavior: 'smooth' });
+    };
+    addEventListener(
+      'scroll',
+      () => {
+        if (!queued) (queued = true), requestAnimationFrame(update);
+      },
+      { passive: true },
+    );
+    update();
+  }
 </script>
 
 <style>
@@ -191,39 +270,54 @@ import { business, telLink, isDated, itemId } from '../data/site';
     color: var(--accent);
     border-bottom: 2px solid var(--ink);
   }
-  .fm__group {
-    margin-bottom: var(--space-12);
+  /* four a row on desktop; categories flow on into each other (spans set at build time) */
+  .fm__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(12px, 1.6vw, 20px);
   }
-  .fm__group-head {
+  /* category title tile: a charcoal card that opens each run of dishes */
+  .fm__cat {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px 12px;
-    margin-bottom: 6px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: clamp(16px, 1.8vw, 24px);
+    background: var(--surface);
+    color: var(--ink);
+    scroll-margin-top: 130px;
   }
-  .fm__group-head h3 {
+  .fm__cat--wide {
+    grid-column: span 2;
+  }
+  .fm__cat-h {
     margin: 0;
+    font-size: clamp(1.7rem, 2.4vw, 2.3rem);
+    line-height: 0.95;
+    color: var(--brand);
   }
-  .fm__group-meta {
+  .fm__cat-meta {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
   }
   .fm__with {
-    margin: 0 0 10px;
+    margin: 0;
     font-size: 14px;
     line-height: 20px;
     color: var(--ink-muted);
   }
-  .fm__grid {
-    list-style: none;
-    margin: 14px 0 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: clamp(12px, 1.6vw, 20px);
+  .fm__count {
+    margin-top: auto;
+    padding-top: 6px;
+    font-size: 11px;
+    color: var(--ink-muted);
+  }
+
+  /* category buttons: phones only */
+  .fm__cats {
+    display: none;
   }
   .fm__item {
     display: flex;
@@ -346,30 +440,88 @@ import { business, telLink, isDated, itemId } from '../data/site';
     font-size: clamp(2rem, 4vw, 3.25rem);
   }
   /* phones: two cards a row so the photos still read */
-  @media (max-width: 560px) {
+  /* tablets: two a row; the build-time spans only line up at four, so drop them */
+  @media (max-width: 960px) {
     .fm__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .fm__cat--wide {
+      grid-column: auto;
+    }
+  }
+  /* phones: one card a row, category buttons pinned to the top */
+  @media (max-width: 600px) {
+    .fm__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+    }
+    .fm__cat {
       gap: 10px;
+      margin-top: 18px;
     }
-    .fm__body {
-      padding: 10px 10px 12px;
-      gap: 4px;
+    .fm__cat:first-child {
+      margin-top: 0;
     }
-    .fm__name {
-      font-size: 15px;
-      line-height: 20px;
+    .fm__count {
+      display: none;
     }
-    .fm__desc {
-      font-size: 13px;
-      line-height: 18px;
+    .fm__jump {
+      display: none;
     }
-    .fm__foot .price {
-      font-size: 20px;
-      line-height: 24px;
+    .fm__cats {
+      display: block;
+      position: sticky;
+      top: 0;
+      z-index: 6;
+      margin-inline: calc(var(--gutter) * -1);
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      transition: top 0.3s var(--ease-out);
     }
-    .fm__ph svg {
-      width: 30px;
-      height: 30px;
+    .fm__cats::-webkit-scrollbar {
+      display: none;
+    }
+    /* the floating site nav drops in on scroll-up: sit below it while it shows */
+    :global(body:has(.nav.is-float:not(.is-hidden))) .fm__cats {
+      top: 68px;
+    }
+    .fm__cats-track {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: max-content;
+      padding: 10px var(--gutter);
+    }
+    .fm__cats-sec {
+      padding: 0 4px 0 10px;
+      font-size: 10px;
+      color: var(--ink-muted);
+      white-space: nowrap;
+    }
+    .fm__cats-sec:first-child {
+      padding-left: 0;
+    }
+    .fm__chip {
+      padding: 10px 14px;
+      border: 1px solid var(--line-strong);
+      font-size: 12px;
+      white-space: nowrap;
+      transition:
+        background-color 0.2s,
+        color 0.2s,
+        border-color 0.2s;
+    }
+    .fm__chip[aria-current] {
+      background: var(--surface-inverse);
+      border-color: var(--surface-inverse);
+      color: var(--ink-inverse);
+    }
+    .fm__section {
+      scroll-margin-top: 70px;
     }
   }
   @media (prefers-reduced-motion: reduce) {

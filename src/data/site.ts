@@ -314,13 +314,6 @@ export const tickerRows: string[][] = [
   ['Pulled pork', 'Smoked chicken', 'Al-faham'],
   ['Momos', 'Burgers', 'Mojitos'],
 ];
-// second run, under the hero, so the two bands don't repeat each other
-export const tickerRowsAlt: string[][] = [
-  ['Smoked platters', 'Pulled beef', 'Pork sausage'],
-  ['Peri peri chicken', 'Afghani al-faham', 'Sizzlers'],
-  ['Fried chicken', 'Brisket sandwich', 'Smoothies'],
-];
-
 // ---------------------------------------------------------------------------
 // How we smoke - four facts, no adjectives.
 // ---------------------------------------------------------------------------
